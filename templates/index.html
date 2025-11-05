@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasty Trail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header>
+        <h1>Tasty Trail</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Produtos</a>
+            <a href="#">Contato</a>
+            <a href="#">Sobre</a>
+        </nav>
+    </header>
+
+    <!-- Seção principal -->
+    <section class="hero">
+        <h2>Peça nossos deliciosos pratos no delivery</h2>
+        <p>Prato vegano</p>
+    </section>
+
+    <!-- Pratos mais famosos -->
+    <section class="pratos">
+        <h3>Nossos pratos mais famosos</h3>
+        <div class="cards">
+            <div class="card">
+                <img src="{{ url_for('static', filename='salada.jpg') }}" alt="Salada">
+                <h4>Salada refrescante</h4>
+                <button>Adicionar ao carrinho</button>
+            </div>
+            <div class="card">
+                <img src="{{ url_for('static', filename='risoto.jpg') }}" alt="Risoto">
+                <h4>Risoto de Limão</h4>
+                <button>Adicionar ao carrinho</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>© 2025 Tasty Trail | Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>
