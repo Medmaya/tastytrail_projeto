@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "password": "123",
+      "role": "admin",
+      "banned": false,
+      "warnings": 0
+    },
+    {
+      "username": "empresa01",
+      "password": "abc",
+      "role": "empresa",
+      "banned": false,
+      "warnings": 0
+    },
+    {
+      "username": "cliente01",
+      "password": "senha",
+      "role": "cliente",
+      "banned": false,
+      "warnings": 0
+    },
+    {
+      "username": "entregador01",
+      "password": "bike",
+      "role": "entregador",
+      "banned": false,
+      "warnings": 0
+    },
+    {
+      "id": "74c408e5-5f57-4e32-a0c1-f324f085d4cf",
+      "username": "cliente02",
+      "email": "cliente01@gmail.com",
+      "password_hash": "Iuz1qGqbTkH90jQDBrnAOaMYzaA/lxZSJ+n0VOkUVtEaVV8AnCeaNeCED7BSdpAH",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0
+    },
+    {
+      "id": "ecfd9ad1-be5d-440a-8c39-716b222c5972",
+      "username": "cliente03",
+      "email": "cliente03@gmail.com",
+      "password_hash": "ho2BD4jOQ1CcpKMJgV9QNU0VeUvCDSGOQoSTVEE293xf2r30LURL4rWFp69u1Ubm",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0
+    }
+  ]
+}

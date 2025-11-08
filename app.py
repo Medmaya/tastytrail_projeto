@@ -1,23 +1,20 @@
-# Importa as funções principais do Flask
-from flask import Flask, render_template
+from flask import Flask
+from routes.main_routes import main_bp
+from routes.admin_routes import admin_bp
+from routes.empresa_routes import empresa_bp
+from routes.cliente_routes import cliente_bp
+from routes.entregador_routes import entregador_bp
 
-# Cria uma instância da aplicação Flask
 app = Flask(__name__)
+app.secret_key = "chave-super-secreta"
 
-# ---------- ROTAS (páginas do site) ----------
+# --- REGISTRO DE BLUEPRINTS ---
+app.register_blueprint(main_bp)
+app.register_blueprint(admin_bp)
+app.register_blueprint(empresa_bp)
+app.register_blueprint(cliente_bp)
+app.register_blueprint(entregador_bp)
 
-# Página inicial
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-# Página "Sobre"
-@app.route('/sobre')
-def sobre():
-    return render_template('sobre.html')
-
-# ---------- EXECUTAR O SERVIDOR ----------
-if __name__ == '__main__':
+# --- INÍCIO DO SERVIDOR ---
+if __name__ == "__main__":
     app.run(debug=True)
-    
-
