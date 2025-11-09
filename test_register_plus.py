@@ -1,23 +1,3 @@
-"""
-test_register_plus.py
-
-Script de testes "plus" para criar usuários, produtos, carrinhos e pedidos aleatórios.
-Ele tenta usar a API HTTP do seu servidor Flask (padrão: http://127.0.0.1:5000).
-É escrito para ser tolerante a variações de endpoints: se um endpoint específico não existir,
-será pulado e o script seguirá adiante.
-
-Ajuste no topo as constantes BASE_URL e os mapeamentos de endpoint conforme sua API.
-O script também gera um arquivo `dev.json` com os usuários criados e suas senhas em texto
-para facilitar login manual durante o desenvolvimento.
-
-Uso: python test_register_plus.py
-
-Observações:
-- Recomendado rodar com o servidor Flask em execução localmente antes de executar.
-- O script faz suposições razoáveis sobre payloads (ex: /register espera username,email,password,role).
-  Caso seu backend use campos diferentes, ajuste os payloads no dicionário `PAYLOADS_TEMPLATES`.
-"""
-
 import requests
 import random
 import json
