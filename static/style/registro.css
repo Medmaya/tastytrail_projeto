@@ -1,0 +1,197 @@
+/* === Header === */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  background-color: #ef4444;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 10px 14px;
+  border-radius: 9999px;
+}
+
+.nav {
+  margin-left: 16px;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-right input {
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.icons {
+  display: flex;
+  gap: 16px;
+  margin-left: 16px;
+}
+
+.icons img {
+  width: 20px;
+  height: 20px;
+}
+
+/* === Main (Register) === */
+.main-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background-color: #f3f4f6;
+  position: relative;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.background-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  border-radius: 12px;
+}
+
+.register-box {
+  background-color: #ef4444;
+  padding: 32px;
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+  color: black;
+  width: 320px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.register-box h1 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.register-box p {
+  margin-bottom: 16px;
+}
+
+.register-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-box input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.register-box button {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.register-box button:hover {
+  background-color: #222;
+}
+
+.login-text {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.login-text a {
+  color: #b91c1c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* === Footer === */
+.footer {
+  background-color: black;
+  color: white;
+  padding: 32px;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-col h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.footer-col h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.footer-col h3 {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 14px;
+  opacity: 0.8;
+}

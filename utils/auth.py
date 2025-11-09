@@ -2,6 +2,7 @@ from functools import wraps
 from flask import session, jsonify, request
 from utils.file_manager import read_json
 
+
 def require_auth():
     def decorator(f):
         @wraps(f)
