@@ -6,14 +6,12 @@ import time
 from typing import Dict, List
 
 BASE_URL = "http://127.0.0.1:5000"
-# Ajuste endpoints aqui conforme sua API real
 ENDPOINTS = {
     "register": "/register",
     "login": "/login",
     "logout": "/logout",
     # criação de produto (admin)
     "create_product": "/products",
-    # adicionar ao carrinho - tentamos várias possibilidades
     "add_to_cart_candidates": ["/cart/add", "/cart", "/carrinho/add"],
     # criar pedido
     "create_order_candidates": ["/orders", "/create_order", "/orders/create"]
