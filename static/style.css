@@ -1,0 +1,97 @@
+:root {
+    --main-color:#CC4B4E;
+    --black:#13131a;
+    --bg:#010103;
+    --border: 0.1rem solid rgba(255,255,255,0.3);
+    --letter:#fff;
+    --grey:rgba(255,255,255,0.3);
+    font-size: 10px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: 0.2s linear;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    background-color: var(--bg);
+}
+
+section {
+    padding: rem 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    border-bottom: var(--border)
+}
+
+.header section {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding-top: 1.5rem;
+   padding-bottom: 1.5rem;
+}
+
+.navbar a {
+    margin: 0 1rem;
+    font-size: 1.8rem;
+    color: var(--letter);
+}
+
+.navbar a:hover {
+    color: var(--main-color);
+    border-bottom: 0.1rem solid var(--main-color);
+    padding-bottom: 0.5rem;
+    font-size: 2rem ;
+}
+
+.searchbox {
+  display: flex;
+  align-items: center;
+  background-color: var(--grey);
+  border-radius: 25px;
+  padding: 5px 10px;
+  width: 300px;
+}
+
+.searchbox {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 25px;
+  padding: 5px 10px;
+  width: 300px;
+}
+
+.searchbox input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 16px;
+}
+
+.searchbox button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.icons {
+    margin: 1rem;
+    cursor: pointer;
+    padding: 1rem 3rem;
+}

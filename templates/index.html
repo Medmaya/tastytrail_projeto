@@ -1,51 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasty Trail</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <title>TASTY TRAIL</title>
 </head>
+
 <body>
+    <header class="header">
+        <section>
+            <a href="#" class="logo">
+                <img src="../img/Logo.svg" alt="logo">
+            </a>
 
-    <!-- Cabeçalho -->
-    <header>
-        <h1>Tasty Trail</h1>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Produtos</a>
-            <a href="#">Contato</a>
-            <a href="#">Sobre</a>
-        </nav>
+            <nav class="navbar">
+                <a href="#home">Home</a>
+                <a href="#products">Produtos</a>
+                <a href="#contacts">Contatos</a>
+                <a href="#about">Sobre</a>
+            </nav>
+
+            <form class="searchbox" action="/buscar" method="get">
+                <input type="search" name="q" placeholder="O que você quer comer hoje?">
+                <button type="submit">
+                    <img width="20" height="20" src="https://img.icons8.com/forma-thin/20/search.png" alt="search" />
+                </button>
+            </form>
+
+            <div class="icons">
+                <img src="../img/Person.svg" alt="person">
+                <img src="../img/Cart.svg" alt="Cart">
+            </div>
+        </section>
     </header>
-
-    <!-- Seção principal -->
-    <section class="hero">
-        <h2>Peça nossos deliciosos pratos no delivery</h2>
-        <p>Prato vegano</p>
-    </section>
-
-    <!-- Pratos mais famosos -->
-    <section class="pratos">
-        <h3>Nossos pratos mais famosos</h3>
-        <div class="cards">
-            <div class="card">
-                <img src="{{ url_for('static', filename='salada.jpg') }}" alt="Salada">
-                <h4>Salada refrescante</h4>
-                <button>Adicionar ao carrinho</button>
-            </div>
-            <div class="card">
-                <img src="{{ url_for('static', filename='risoto.jpg') }}" alt="Risoto">
-                <h4>Risoto de Limão</h4>
-                <button>Adicionar ao carrinho</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Rodapé -->
-    <footer>
-        <p>© 2025 Tasty Trail | Todos os direitos reservados.</p>
-    </footer>
-
 </body>
+/
+
 </html>
