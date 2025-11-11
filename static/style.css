@@ -1,7 +1,7 @@
 :root {
   --main-color: #CC4B4E;
   --bg: #010103;
-  --border: 0.1rem solid rgba(186, 107, 107, 0.3);
+  --border: 0.1rem solid rgba(183, 149, 149, 0.256);
   --letter: #fff;
   --second-color: #cc4b4d86;
   --grey: rgba(255, 255, 255, 0.3);
@@ -32,9 +32,9 @@ body {
 }
 
 section {
-  padding: 1.5rem 1.5rem;
+  padding: 1vh 1vh;
   margin: auto;
-  max-width: 120rem;
+  max-width: 80vw;
 }
 
 .header {
@@ -51,49 +51,49 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 2.5rem;
-  padding-bottom: 1.8rem;
+  padding-top: 1.5vw;
+  padding-bottom: 1.5vw;
 }
 
 .logotipo {
-  width: 120px;
+  width: 5.5vw;
   height: auto;
 }
 
 .navbar a {
-  margin: 0 1rem;
-  font-size: 1.6rem;
+  margin: 0px 10px;
+  font-size: 1.2vw;
   color: var(--letter);
+  font-weight: 200;
 }
 
 .navbar a:hover {
   color: var(--main-color);
-  border-bottom: 0.1rem solid var(--main-color);
-  padding-bottom: 0.5rem;
-  font-size: 1.7rem;
+  border-bottom: 0.1vw solid var(--main-color);
+  padding-bottom: 0.5vw;
+  font-size: 1.2vw;
 }
 
 .searchbox {
   display: flex;
   align-items: center;
-  justify-content:center;  
-  border: 1rem;
-  background-color: var(--second-color);
-  border-radius: 0.8rem;
-  padding: 1rem 4rem;
-  width: 400px;
-  margin-left: 30rem;
+  justify-content: space-between;
+  border: 0.1vw solid var(--letter);
+  background-color: transparent;
+  border-radius: 0.4vw;
+  padding: 0.8vw 0.9vw;
+  width: 17vw;
+  margin-left: 20vw;
 }
 
 .searchbox input {
-  display: flex;
-  text-transform: none;
+  flex: 1;
   color: var(--letter);
   border: none;
   outline: none;
-  flex: 1;
-  font-size: 1.2rem;
-  background-color: transparent;
+  font-size: 0.9vw;
+  background: transparent;
+  text-transform: none;
 }
 
 .searchbox input::placeholder {
@@ -103,28 +103,50 @@ section {
 
 .searchbox button {
   border: none;
-  background: transparent;
+  background: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: brightness(0) invert(1);
 }
+
 
 .searchbox button img:hover {
   transform: scale(1.2);
 }
 
-.icons img {
+
+.icons #cart {
   cursor: pointer;
-  width: 30px;
-  padding: 0.5rem 1rem;
+  width: 1.9vw;
+  height: 3vh;
+  padding: 0.2vw 0.2vw;
+  filter: brightness(0) invert(1);
+  transition: all 0.2 linear;
+}
+
+.icons #person {
+  cursor: pointer;
+  width: 3.3vw;
+  height: 3.3vh;
+  padding: 0.1vw 0.1vw;
+  filter: brightness(0) invert(1);
+  transition: all 0.2 linear;
+}
+
+.icons #sun {
+  cursor: pointer;
+  width: 2vw;
+  height: 4vh;
+  padding: 0.2vw 0.6vw;
   filter: brightness(0) invert(1);
   transition: all 0.2 linear;
 }
 
 .icons img:hover {
-  width: 30px;
-  height: 30px;
+  width: 3.4vw;
+  height: 3.4vh;
   transform: scale(1.2);
 }
 
@@ -132,13 +154,13 @@ section {
   background: none;
   border: none;
   cursor: pointer;
-  margin-left: 1rem;
+  margin-left: 1vw;
 }
 
 #theme-toggle img {
   filter: brightness(0) invert(1);
-  width: 34px;
-  height: 34px;
+  width: 1.77vw;
+  height: 3.15vh;
   transition: all 0.3s linear;
 }
 
@@ -148,41 +170,43 @@ section {
 
 .home-container {
   display: flex;
-  background: url("../img/image\ 1.svg");
+  background: url("../img/Image.svg");
   background-repeat: no-repeat;
-  background-position: center 197px;
+  background-position: center;
   background-size: contain;
   justify-content: center;
   text-align: center;
   position: relative;
   align-items: center;
   min-height: 100vh;
-  margin-top: 0;
+  margin-top: 2.5vw;
 }
 
 .content {
-  max-width: 80rem;
+  max-width: 106vw;
   text-align: center;
 }
 
 .content h3 {
-  color: var(--letter);
-  font-size: 5rem;
+  color: #ffffffbd;
+  font-size: 3.8vw;
   text-transform: none;
-  font-weight: 900;
+  font-weight: 1000;
   line-height: 1.2;
   text-align: center;
+  font-family: "poppins", sans-serif;
 }
 
 .btn {
   background-color: transparent;
   text-transform: none;
+  border-radius: 0.2vh;
   color: var(--letter);
-  border: 1.2px solid var(--letter);
-  padding: 1.2rem 3.5rem;
-  font-size: 1.8rem;
+  border: 0.3vh solid var(--letter);
+  padding: 1vh 5vh;
+  font-size: 1.3vw;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 2vw;
   display: inline-block;
   font-weight: 500;
   transition: all 0.2s linear;
@@ -193,33 +217,154 @@ section {
 }
 
 .home-about {
-    display: flex;
-    flex-direction: column; /* deixa os itens um embaixo do outro */
-    align-items: flex-start; /* alinha tudo à esquerda */
-    justify-content: center;
-    padding: 6rem 8rem; /* espaçamento interno */
-    margin-top: 5rem; /* distância da seção anterior */
-    gap: 2rem; /* espaço entre img, texto e botão */
-    color: var(--letter);
-    background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 6% 8%;
+  gap: 4vh;
+  color: var(--letter);
+  background-color: var(--bg);
+  margin-top: -5vh;
 }
 
 .home-about img {
-    width: 400px;
-    max-width: 100%;
-    border-radius: 1rem;
+  width: 30vw;
+  max-width: 100%;
+  border-radius: 1rem;
+  margin-left: -1.5vh;
 }
 
 .home-about p {
-    font-size: 1.6rem;
-    line-height: 1.6;
-    max-width: 600px;
+  font-size: 1.5vw;
+  line-height: 1.2;
+  max-width: 75%;
+  text-align: start;
+  text-transform: none;
+  font-weight: 350;
 }
 
 .home-about .btn {
-    padding: 1rem 2rem;
-    border-radius: 0.5rem; 
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s linear; 
+  text-transform: none;
+  padding: 1% 2%;
+  border-radius: 0.2vh;
+  text-decoration: none;
+  color: var(--main-color);
+  border: 0.3vh solid var(--main-color);
+  padding: 1vh;
+  font-size: 2.3vh;
+  cursor: pointer;
+  margin-top: -1px;
+  display: inline-block;
+  font-weight: 400;
+  transition: all 0.2s linear;
+}
+
+.btn a:hover {
+  color: var(--second-color);
+}
+
+.home-menu {
+  margin-top: 5vh;
+  text-align: center;
+  padding: 6vh 4vw;
+}
+
+.home-menu h2 {
+  color: var(--letter);
+  font-size: 2.8vw;
+  font-weight: 700;
+  margin-bottom: 5vh;
+  margin-left: -3.4vh;
+  text-transform: none;
+  text-align: left;
+}
+
+.menu-cards {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 8vw;
+  padding: 0 2vw;
+  flex-wrap: nowrap;
+  width: 90vw;
+  height: 50vh;
+  box-sizing: border-box;
+  margin-left: -5.6vw;
+  margin-top: 5vw;
+}
+
+.card {
+  background-color: var(--bg);
+  border: 0.2vw solid var(--letter);
+  border-radius: 0 1.2vw 1.2vw 1.2vw;
+  box-shadow: 0.2vw 0.2vw 1vw var(--letter);
+  width: 26vw;
+  padding: 2vh 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-0.5vh);
+}
+
+.card img {
+  width: 12vw;
+  height: 12vw;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 2vh;
+  margin-top: 3vh;
+}
+
+.card h3 {
+  text-transform: none;
+  margin-top: 2vh;
+  color: var(--letter);
+  font-size: 1.3vw;
+  font-weight: 700;
+  margin-bottom: 3vh;
+}
+
+.card button {
+  background-color: transparent;
+  border: 0.2vw solid #cc4b4e;
+  color: #cc4b4e;
+  font-size: 1vw;
+  font-weight: 500;
+  padding: 1vh 1vw;
+  border-radius: 0.6vw;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.card button:hover {
+  background-color: #cc4b4e;
+  color: #fff;
+}
+
+.menu-products {
+  margin-top: 5vh;
+}
+
+.home-team h2 {
+  margin-top: 15vh;
+}
+
+.pictures {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 3vw;
+  padding: 0 2vw;
+  flex-wrap: nowrap;
+  margin-left: -4vw;
+  margin-top: 10vh;
+}
+
+.home-feedbacks h2 {
+    margin-top: 15vh;
 }

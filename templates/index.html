@@ -26,18 +26,16 @@
             <form class="searchbox" action="/buscar" method="get">
                 <input type="search" name="q" placeholder="O que você quer comer hoje?">
                 <button type="submit">
-                    <img width="30" height="30" src="https://img.icons8.com/forma-thin/30/search.png" alt="search" />
+                    <img width="20" height="20" src="https://img.icons8.com/forma-thin/20/search.png" alt="search" />
                 </button>
             </form>
 
             <div class="icons">
-                <img src="../img/Person.svg" alt="person">
-                <img src="../img/Cart.svg" alt="Cart">
+                <img src="../img/Person.svg" id="person" alt="person">
+                <img src="../img/Cart.svg" id="cart" alt="Cart">
+                <img width="60" height="60" src="https://img.icons8.com/ios/60/sun--v1.png" id="sun"
+                    alt="white-theme" />
             </div>
-
-            <button id="theme-toggle">
-                <img width="60" height="60" src="https://img.icons8.com/ios/60/sun--v1.png" alt="sun--v1" />
-            </button>
         </section>
     </header>
 
@@ -52,12 +50,68 @@
     </div>
 
     <div class="home-about">
-        <img src="../img/Ábout 1.svg" alt="about">
+        <img src="../img/Group 1.svg" alt="about">
         <p>Na TastyTrail, acreditamos que a culinária é uma jornada de descoberta e prazer. Nossa cozinha é um
             mapa vivo, traçando um caminho através dos sabores do mundo. Cada prato é uma parada em uma aventura
-            gastronômica única, levando os paladares dos nossos clientes a lugares distantes e exóticos</p>
-        <a href="#" class="btn">Saiba mais sobre a nossa história</a>
+            gastronômica única, levando os paladares dos nossos clientes a lugares distantes e exóticos.</p>
+        <a href="#about" class="btn">Saiba mais da nossa história</a>
     </div>
+
+    <section class="home-menu">
+        <h2>Nossos pratos mais famosos</h2>
+
+        <div class="menu-cards">
+            <div class="card">
+                <img src="../img/Sushi.svg" alt="Comida Japonesa">
+                <h3>Sushi</h3>
+                <button>Adicionar ao carrinho 🛒</button>
+            </div>
+
+            <div class="card">
+                <img src="../img/RisotoDeLimao.svg" alt="Risoto de Limão">
+                <h3>Risoto de Limão</h3>
+                <button>Adicionar ao carrinho 🛒</button>
+            </div>
+
+            <div class="card">
+                <img src="../img/Salada.svg" alt="Salada de Parma">
+                <h3>Salada de Parma</h3>
+                <button>Adicionar ao carrinho 🛒</button>
+            </div>
+        </div>
+
+        <div class="menu-products">
+            <a href="#products" class="btn" id="menu-btn">Ver menu completo</a>
+        </div>
+
+        <section class="home-team">
+                <h2 class="title">Nosso time</h2>
+
+            <div class="pictures">
+                <div class="chefe-card">
+                    <img src="../img/Chef 1.svg" alt="Chef cozinhando no escuro">
+                </div>
+
+                <div class="chefe-card">    
+                    <img src="../img/Chefe 2.svg" alt="Chef picando tomate">
+                </div>
+
+                <div class="chefe-card">
+                    <img src="../img/Chefe 3.svg" alt="Chef fazendo malabarismo com macarrão">
+                </div>
+
+                <div class="chefe-card">
+                    <img src="../img/Chefe 4.svg" alt="Chef finalizando um prato">
+                </div>
+
+        </section>
+    
+    </section class="home-feedbacks">
+            <h2 class="title">Avaliações</h2>
+
+         <div class="feedbacks">
+    </section>
+    
 </body>
 
 </html>
