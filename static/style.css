@@ -617,7 +617,8 @@ section {
 .contatos {
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 10vw;
   margin-top: 2vh;
   padding-bottom: 4vh;
 }
@@ -626,6 +627,7 @@ section {
 .contatos-right {
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .contatos h4 {
@@ -641,4 +643,13 @@ section {
   font-size: 1.8vh;
   color: var(--letter);
   margin-bottom: 1.2vh;
+}
+
+.sobre h1 {
+  color: var(--letter);
+  font-size: 2.5vw;
+  font-weight: 600;
+  margin-bottom: 5vh;
+  text-transform: none;
+  width: 100%;
 }
