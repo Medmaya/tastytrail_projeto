@@ -1,0 +1,587 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-11-08T00:00:00.000Z",
+  "__export_source": "chatgpt-tastytrail",
+  "resources": [
+    {
+      "_id": "wrk_tastytrail",
+      "parentId": null,
+      "_type": "workspace",
+      "name": "TastyTrail API",
+      "description": "Coleção para testar todas as rotas do projeto Flask (TastyTrail)."
+    },
+    {
+      "_id": "env_tastytrail",
+      "parentId": "wrk_tastytrail",
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://127.0.0.1:5000"
+      }
+    },
+
+    {
+      "_id": "req_register_admin",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /register (create admin)",
+      "method": "POST",
+      "url": "{{ base_url }}/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"email\": \"admin@local\",\n  \"role\": \"admin\"\n}"
+      }
+    },
+    {
+      "_id": "req_register_empresa",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /register (create empresa)",
+      "method": "POST",
+      "url": "{{ base_url }}/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"empresa01\",\n  \"password\": \"empresa123\",\n  \"email\": \"empresa01@local\",\n  \"role\": \"empresa\"\n}"
+      }
+    },
+    {
+      "_id": "req_register_cliente",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /register (create cliente)",
+      "method": "POST",
+      "url": "{{ base_url }}/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"cliente01\",\n  \"password\": \"cliente123\",\n  \"email\": \"cliente01@local\",\n  \"role\": \"cliente\"\n}"
+      }
+    },
+    {
+      "_id": "req_register_entregador",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /register (create entregador)",
+      "method": "POST",
+      "url": "{{ base_url }}/register",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"entregador01\",\n  \"password\": \"entrega123\",\n  \"email\": \"entregador01@local\",\n  \"role\": \"entregador\"\n}"
+      }
+    },
+    {
+      "_id": "req_login_admin",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /login (admin)",
+      "method": "POST",
+      "url": "{{ base_url }}/login",
+      "body": {"mimeType":"application/json","text":"{\n  \"username\":\"admin\",\n  \"password\":\"admin123\"\n}"}
+    },
+    {
+      "_id": "req_login_empresa",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /login (empresa)",
+      "method": "POST",
+      "url": "{{ base_url }}/login",
+      "body": {"mimeType":"application/json","text":"{\n  \"username\":\"empresa01\",\n  \"password\":\"empresa123\"\n}"}
+    },
+    {
+      "_id": "req_login_cliente",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /login (cliente)",
+      "method": "POST",
+      "url": "{{ base_url }}/login",
+      "body": {"mimeType":"application/json","text":"{\n  \"username\":\"cliente01\",\n  \"password\":\"cliente123\"\n}"}
+    },
+    {
+      "_id": "req_login_entregador",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /login (entregador)",
+      "method": "POST",
+      "url": "{{ base_url }}/login",
+      "body": {"mimeType":"application/json","text":"{\n  \"username\":\"entregador01\",\n  \"password\":\"entrega123\"\n}"}
+    },
+    {
+      "_id": "req_logout",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /logout",
+      "method": "POST",
+      "url": "{{ base_url }}/logout"
+    },
+
+    {
+      "_id": "req_admin_users_list",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/users",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/users"
+    },
+    {
+      "_id": "req_admin_users_get",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/users/:user_id",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/users/USER_ID_HERE"
+    },
+    {
+      "_id": "req_admin_users_create",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/users",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/users",
+      "body": {"mimeType":"application/json","text":"{\n  \"username\":\"testuser\",\n  \"password\":\"testpass\",\n  \"email\":\"test@local\",\n  \"role\":\"cliente\",\n  \"credits\": 100\n}"}
+    },
+    {
+      "_id": "req_admin_users_update",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /admin/users/:user_id",
+      "method": "PUT",
+      "url": "{{ base_url }}/admin/users/USER_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"email\":\"novo@local\",\n  \"role\":\"cliente\",\n  \"credits\": 200\n}"}
+    },
+    {
+      "_id": "req_admin_users_delete",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "DELETE /admin/users/:user_id",
+      "method": "DELETE",
+      "url": "{{ base_url }}/admin/users/USER_ID_HERE"
+    },
+    {
+      "_id": "req_admin_ban",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/ban/:user_id",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/ban/USER_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"permanent\": false,\n  \"until\": \"2025-12-01T00:00:00Z\",\n  \"reason\": \"spam\"\n}"}
+    },
+    {
+      "_id": "req_admin_warn",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/warn/:user_id",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/warn/USER_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"note\": \"Aviso por spam\"\n}"}
+    },
+    {
+      "_id": "req_admin_topup",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/topup",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/topup",
+      "body": {"mimeType":"application/json","text":"{\n  \"user_id\": \"USER_ID_HERE\",\n  \"amount\": 500\n}"}
+    },
+
+    {
+      "_id": "req_admin_list_enterprises",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/enterprises",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/enterprises"
+    },
+    {
+      "_id": "req_admin_create_enterprise",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/enterprises",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/enterprises",
+      "body": {"mimeType":"application/json","text":"{\n  \"owner_id\":\"ENTERPRISE_OWNER_USER_ID\",\n  \"name\":\"Lanchonete X\",\n  \"balance\": 0\n}"}
+    },
+    {
+      "_id": "req_admin_get_enterprise",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/enterprises/:ent_id",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/enterprises/ENTERPRISE_ID_HERE"
+    },
+    {
+      "_id": "req_admin_update_enterprise",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /admin/enterprises/:ent_id",
+      "method": "PUT",
+      "url": "{{ base_url }}/admin/enterprises/ENTERPRISE_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"name\":\"Lanchonete X Nova\",\n  \"balance\": 1000\n}"}
+    },
+    {
+      "_id": "req_admin_delete_enterprise",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "DELETE /admin/enterprises/:ent_id",
+      "method": "DELETE",
+      "url": "{{ base_url }}/admin/enterprises/ENTERPRISE_ID_HERE"
+    },
+    {
+      "_id": "req_admin_list_products",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/products",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/products"
+    },
+    {
+      "_id": "req_admin_create_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/enterprises/:ent_id/products",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/enterprises/ENTERPRISE_ID_HERE/products",
+      "body": {"mimeType":"application/json","text":"{\n  \"name\":\"X-Burguer\",\n  \"price_credits\": 50,\n  \"description\":\"Delícia\",\n  \"ingredients\":[\"pão\",\"carne\",\"queijo\"]\n}"}
+    },
+    {
+      "_id": "req_admin_update_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /admin/products/:product_id",
+      "method": "PUT",
+      "url": "{{ base_url }}/admin/products/PRODUCT_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"name\":\"X-Burguer Grande\",\n  \"price_credits\": 65\n}"}
+    },
+    {
+      "_id": "req_admin_delete_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "DELETE /admin/products/:product_id",
+      "method": "DELETE",
+      "url": "{{ base_url }}/admin/products/PRODUCT_ID_HERE"
+    },
+    {
+      "_id": "req_admin_list_orders",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/orders",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/orders"
+    },
+    {
+      "_id": "req_admin_get_order",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/orders/:order_id",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/orders/ORDER_ID_HERE"
+    },
+    {
+      "_id": "req_admin_update_order",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /admin/orders/:order_id",
+      "method": "PUT",
+      "url": "{{ base_url }}/admin/orders/ORDER_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"status\":\"preparing\",\n  \"assigned_delivery\":\"DELIVERY_USER_ID\"\n}"}
+    },
+    {
+      "_id": "req_admin_delete_order",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "DELETE /admin/orders/:order_id",
+      "method": "DELETE",
+      "url": "{{ base_url }}/admin/orders/ORDER_ID_HERE"
+    },
+    {
+      "_id": "req_admin_transactions",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/transactions",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/transactions"
+    },
+    {
+      "_id": "req_admin_get_transaction",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/transactions/:tx_id",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/transactions/TX_ID_HERE"
+    },
+    {
+      "_id": "req_admin_list_payouts",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/payouts",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/payouts"
+    },
+    {
+      "_id": "req_admin_complete_payout",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /admin/payouts/:payout_id/complete",
+      "method": "POST",
+      "url": "{{ base_url }}/admin/payouts/PAYOUT_ID_HERE/complete"
+    },
+    {
+      "_id": "req_admin_export",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/export (backup)",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/export"
+    },
+
+    {
+      "_id": "req_empresa_dashboard",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /empresa/dashboard",
+      "method": "GET",
+      "url": "{{ base_url }}/empresa/dashboard"
+    },
+    {
+      "_id": "req_empresa_list_products",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /empresa/products",
+      "method": "GET",
+      "url": "{{ base_url }}/empresa/products"
+    },
+    {
+      "_id": "req_empresa_create_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /empresa/products",
+      "method": "POST",
+      "url": "{{ base_url }}/empresa/products",
+      "body": {"mimeType":"application/json","text":"{\n  \"name\":\"Pizza Calabresa\",\n  \"price_credits\": 45,\n  \"description\":\"Calabresa com cebola\",\n  \"ingredients\":[\"calabresa\",\"cebola\",\"queijo\"]\n}"}
+    },
+    {
+      "_id": "req_empresa_update_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /empresa/products/:product_id",
+      "method": "PUT",
+      "url": "{{ base_url }}/empresa/products/PRODUCT_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"price_credits\": 50\n}"}
+    },
+    {
+      "_id": "req_empresa_delete_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "DELETE /empresa/products/:product_id",
+      "method": "DELETE",
+      "url": "{{ base_url }}/empresa/products/PRODUCT_ID_HERE"
+    },
+    {
+      "_id": "req_empresa_orders",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /empresa/orders",
+      "method": "GET",
+      "url": "{{ base_url }}/empresa/orders"
+    },
+    {
+      "_id": "req_empresa_update_order_status",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /empresa/orders/:order_id/status",
+      "method": "PUT",
+      "url": "{{ base_url }}/empresa/orders/ORDER_ID_HERE/status",
+      "body": {"mimeType":"application/json","text":"{\n  \"status\":\"preparing\"\n}"}
+    },
+    {
+      "_id": "req_empresa_request_payout",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /empresa/payout/request",
+      "method": "POST",
+      "url": "{{ base_url }}/empresa/payout/request",
+      "body": {"mimeType":"application/json","text":"{\n  \"amount\": 500\n}"}
+    },
+
+    {
+      "_id": "req_cliente_view_cart",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /cliente/cart",
+      "method": "GET",
+      "url": "{{ base_url }}/cliente/cart"
+    },
+    {
+      "_id": "req_cliente_add_to_cart",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /cliente/cart/add",
+      "method": "POST",
+      "url": "{{ base_url }}/cliente/cart/add",
+      "body": {"mimeType":"application/json","text":"{\n  \"product_id\":\"PRODUCT_ID_HERE\",\n  \"quantity\": 2\n}"}
+    },
+    {
+      "_id": "req_cliente_remove_from_cart",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /cliente/cart/remove",
+      "method": "POST",
+      "url": "{{ base_url }}/cliente/cart/remove",
+      "body": {"mimeType":"application/json","text":"{\n  \"product_id\":\"PRODUCT_ID_HERE\"\n}"}
+    },
+    {
+      "_id": "req_cliente_place_order",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /cliente/order (place from cart)",
+      "method": "POST",
+      "url": "{{ base_url }}/cliente/order",
+      "body": {"mimeType":"application/json","text":"{}"}
+    },
+    {
+      "_id": "req_cliente_orders",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /cliente/orders",
+      "method": "GET",
+      "url": "{{ base_url }}/cliente/orders"
+    },
+    {
+      "_id": "req_cliente_favorite_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /favorite/product/:product_id",
+      "method": "POST",
+      "url": "{{ base_url }}/favorite/product/PRODUCT_ID_HERE"
+    },
+    {
+      "_id": "req_cliente_balance",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /user/:user_id/balance",
+      "method": "GET",
+      "url": "{{ base_url }}/user/USER_ID_HERE/balance"
+    },
+
+    {
+      "_id": "req_get_product",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /product/:product_id",
+      "method": "GET",
+      "url": "{{ base_url }}/product/PRODUCT_ID_HERE"
+    },
+    {
+      "_id": "req_list_products",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /products (search)",
+      "method": "GET",
+      "url": "{{ base_url }}/search?q=pizza"
+    },
+    {
+      "_id": "req_product_review",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /product/:product_id/review",
+      "method": "POST",
+      "url": "{{ base_url }}/product/PRODUCT_ID_HERE/review",
+      "body": {"mimeType":"application/json","text":"{\n  \"rating\": 5,\n  \"comment\":\"Ótimo!\"\n}"}
+    },
+    {
+      "_id": "req_recommend",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /recommend",
+      "method": "POST",
+      "url": "{{ base_url }}/recommend",
+      "body": {"mimeType":"application/json","text":"{\n  \"prompt\":\"quero algo barato e saboroso, gosto de queijo\"\n}"}
+    },
+
+    {
+      "_id": "req_get_order_public",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /order/:order_id",
+      "method": "GET",
+      "url": "{{ base_url }}/order/ORDER_ID_HERE"
+    },
+
+    {
+      "_id": "req_entregador_assigned",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /entregador/assigned",
+      "method": "GET",
+      "url": "{{ base_url }}/entregador/assigned"
+    },
+    {
+      "_id": "req_entregador_accept",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /entregador/assign/:order_id",
+      "method": "POST",
+      "url": "{{ base_url }}/entregador/assign/ORDER_ID_HERE"
+    },
+    {
+      "_id": "req_entregador_complete",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /entregador/complete/:order_id",
+      "method": "POST",
+      "url": "{{ base_url }}/entregador/complete/ORDER_ID_HERE"
+    },
+    {
+      "_id": "req_entregador_balance",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /entregador/balance",
+      "method": "GET",
+      "url": "{{ base_url }}/entregador/balance"
+    },
+    {
+      "_id": "req_entregador_payout",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "POST /entregador/payout/request",
+      "method": "POST",
+      "url": "{{ base_url }}/entregador/payout/request",
+      "body": {"mimeType":"application/json","text":"{\n  \"amount\": 200\n}"}
+    },
+
+    {
+      "_id": "req_admin_list_transactions",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/transactions",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/transactions"
+    },
+    {
+      "_id": "req_get_transactions",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /transactions (public?)",
+      "method": "GET",
+      "url": "{{ base_url }}/transactions"
+    },
+
+    {
+      "_id": "req_admin_get_userstate",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "GET /admin/userstate/:user_id",
+      "method": "GET",
+      "url": "{{ base_url }}/admin/userstate/USER_ID_HERE"
+    },
+    {
+      "_id": "req_admin_update_userstate",
+      "parentId": "wrk_tastytrail",
+      "_type": "request",
+      "name": "PUT /admin/userstate/:user_id",
+      "method": "PUT",
+      "url": "{{ base_url }}/admin/userstate/USER_ID_HERE",
+      "body": {"mimeType":"application/json","text":"{\n  \"cart\": [],\n  \"favorites\": {\"products\": [], \"enterprises\": []}\n}"}
+    }
+  ]
+}

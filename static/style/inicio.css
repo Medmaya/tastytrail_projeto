@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: #e6e6e6;
+    color: #111;
+}
+
+/* HEADER */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+    background: #fff;
+}
+
+.logo {
+    background: #e14b4b;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.3rem;
+    padding: 0.6rem 1rem;
+    border-radius: 50%;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: #111;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a.active {
+    color: #e14b4b;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-actions input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.icons span {
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+/* HERO */
+.hero {
+    position: relative;
+    height: 400px;
+    background: url('https://source.unsplash.com/1600x900/?food,table') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-overlay {
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3rem;
+    border-radius: 12px;
+}
+
+.hero-overlay h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.btn, .btn-outline {
+    border: 2px solid #e14b4b;
+    background: none;
+    color: #e14b4b;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn {
+    background: #e14b4b;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-outline:hover {
+    background: #e14b4b;
+    color: #fff;
+}
+
+/* SECTIONS */
+section {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+/* SOBRE */
+.sobre p {
+    max-width: 700px;
+    margin: 1rem auto;
+    color: #333;
+}
+
+/* PRATOS */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 280px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* TIME */
+.time-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.time-grid img {
+    width: 220px;
+    height: 220px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* AVALIAÇÕES */
+.avaliacoes {
+    background: #f3f3f3;
+}
+
+.reviews {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.review {
+    background: #111;
+    color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: left;
+}
+
+.review .quote {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #e14b4b;
+}
+
+/* FOOTER */
+footer {
+    background: #111;
+    color: #ccc;
+    padding: 3rem 2rem;
+}
+
+.footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.footer-top h3, .footer-top h4 {
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.footer-top ul {
+    list-style: none;
+}
+
+.footer-top a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+}
+
+.socials a {
+    margin-right: 0.5rem;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .nav-actions input {
+        width: 100%;
+    }
+
+    .cards, .reviews {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 2rem;
+    }
+}

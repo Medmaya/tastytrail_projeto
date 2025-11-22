@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap" rel="stylesheet">
-    <title>TASTY TRAIL</title>
+    <title>Tasty Trail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
     <header class="header">
@@ -39,11 +36,20 @@
         </section>
     </header>
 
-    <div class="home-container">
-        <section id="#home">
-            <div class="content">
-                <h3>Peça nossos deliciosos pratos no delivery</h3>
-                <a href="#" class="btn">Pedir agora</a>
+    <!-- Seção principal -->
+    <section class="hero">
+        <h2>Peça nossos deliciosos pratos no delivery</h2>
+        <p>Prato vegano</p>
+    </section>
+
+    <!-- Pratos mais famosos -->
+    <section class="pratos">
+        <h3>Nossos pratos mais famosos</h3>
+        <div class="cards">
+            <div class="card">
+                <img src="{{ url_for('static', filename='salada.jpg') }}" alt="Salada">
+                <h4>Salada refrescante</h4>
+                <button>Adicionar ao carrinho</button>
             </div>
         </section>
     </div>
@@ -182,5 +188,4 @@
     </footer>
 
 </body>
-
 </html>
