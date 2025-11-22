@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tasty Trail - Registrar</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../static/style/registro.css">
+  <script src="../static/registro.js" defer></script>
 </head>
 <body>
 
@@ -36,13 +37,36 @@
       <div class="register-box">
         <h1>Bem-vindo</h1>
         <p>Crie sua conta</p>
-        <form>
-          <input type="text" placeholder="Nome">
-          <input type="text" placeholder="Número">
-          <input type="password" placeholder="Senha">
-          <input type="password" placeholder="Confirme sua senha">
-          <button type="submit">Registrar</button>
+
+        <form id="register-form">
+          <!-- Etapa 1 -->
+          <div class="step" id="step1">
+            <input type="text" id="nome" placeholder="Nome" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="senha" placeholder="Senha" required>
+            <input type="password" id="confirmarSenha" placeholder="Confirme sua senha" required>
+            <button type="button" id="continuar1">Continuar</button>
+          </div>
+
+          <!-- Etapa 2 -->
+          <div class="step" id="step2" style="display:none;">
+            <p>Selecione o tipo de conta:</p>
+            <select id="tipoConta" required>
+              <option value="">Selecione...</option>
+              <option value="cliente">Cliente</option>
+              <option value="empresa">Empresa</option>
+              <option value="entregador">Entregador</option>
+            </select>
+            <button type="button" id="continuar2">Continuar</button>
+          </div>
+
+          <!-- Etapa 3 -->
+          <div class="step" id="step3" style="display:none;">
+            <div id="camposExtras"></div>
+            <button type="submit">Registrar</button>
+          </div>
         </form>
+
         <p class="login-text">Já tem uma conta? <a href="#">Faça login</a></p>
       </div>
     </div>
