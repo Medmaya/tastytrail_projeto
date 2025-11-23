@@ -16,7 +16,7 @@
   <body>
     <header class="header">
       <section>
-        <a href="/inicio" class="logo">
+        <a href="/" class="logo">
           <img
             src="{{ url_for('static', filename='img/Logo.svg') }}"
             alt="logo"
@@ -25,7 +25,7 @@
         </a>
 
         <nav class="navbar">
-          <a href="/inicio">Home</a>
+          <a href="/">Home</a>
           <a href="/produtos">Produtos</a>
           <a href="/contatos">Contatos</a>
           <a href="/sobre">Sobre</a>
@@ -70,7 +70,7 @@
     <main class="site-main">
       <div class="hero" role="region" aria-label="Login hero">
         <div class="card">
-          <h2>Bem-vindo de volta</h2>
+          <h2>Bem-vindo(a) de volta</h2>
           <p class="lead">Faça o login</p>
 
           <form id="loginForm" action="/login" method="POST">
