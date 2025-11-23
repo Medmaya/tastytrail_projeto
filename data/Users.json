@@ -1,0 +1,72 @@
+{
+  "users": [
+    {
+      "id": "b9032069-7ca5-43e7-87a5-51926785d748",
+      "username": "cliente02",
+      "email": "cliente01@gmail.com",
+      "password_hash": "kQp2YephSiXM5cGu1bMv4k35iSF5p7xK7DsUkWB1FFLRvBBEL96XpOvnLi7yOh1H",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0
+    },
+    {
+      "id": "af326a9b-ad0d-4516-ba8e-08f2ca14dcdb",
+      "username": "cliente10",
+      "email": "cliente10@gmail.com",
+      "password_hash": "SoKR+dB23z8SGLRd7RLNFDnmW/bt0EV/QzQpj/myHCtBDUJtXA8opCOQC/7zF/kO",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "client_data": {
+        "full_name": "Primeiro Cliente do Front!",
+        "address": "Travessa Airton Teodoro, 200",
+        "phone": "11998403000"
+      }
+    },
+    {
+      "id": "fbc297e6-fa15-498a-be22-b5346bccfd61",
+      "username": "empresa01",
+      "email": "empresa01@gmail.com",
+      "password_hash": "PKxeeCn1Vxxbg6j12cKr7RtqIjw40Ic3j/uYkCOyIdgqnSM1EamS2r7lRmLcVJwG",
+      "role": "empresa",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "company_data": {
+        "company_name": "Primeira Empresa do Front!",
+        "cnpj": "9999999999967",
+        "address": "Travessa Airton Teodoro, 200",
+        "working_hours": "8h ÁS 22H",
+        "phone": "11998403000"
+      }
+    },
+    {
+      "id": "03ab9ea3-c126-41b8-8ae6-16ccab53e0ec",
+      "username": "entregador01",
+      "email": "entregador01@gmail.com",
+      "password_hash": "BhsQP4Fqr/BVxhwBRqVfSlVeQgb36ogI/+wGrMGwQAjOveNtIcpTqn3mb0rmPrz9",
+      "role": "entregador",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "deliveryman_data": {
+        "full_name": "Primeiro Entregador do Front!",
+        "document_id": "232353436364364",
+        "phone": "11998403000",
+        "vehicle_type": "Moto"
+      }
+    },
+    {
+      "id": "bf009cfb-5458-41cd-b79c-10349f557914",
+      "username": "admin",
+      "email": "admin@local",
+      "password_hash": "vBTJ2tnPFqUpDgkanRyBHWYXnNkJlM6acM87LS3wY8ZslE5rt9oF+VvtYqeA/P97",
+      "role": "admin",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0
+    }
+  ]
+}

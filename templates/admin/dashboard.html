@@ -1,11 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Inicio</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tasty Trail — Painel Admin</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboardAdmin.css') }}">
+
 </head>
 <body>
-    
+  <div class="dashboard-container">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <h1 class="logo">TASTY TRAIL</h1>
+        <p class="role">Administrador</p>
+      </div>
+
+      <nav class="menu">
+        <button class="menu-btn active" data-section="overview">🔎 Visão geral</button>
+        <button class="menu-btn" data-section="users">👥 Usuários</button>
+        <button class="menu-btn" data-section="orders">📦 Pedidos</button>
+        <button class="menu-btn" data-section="enterprises">🏬 Empresas</button>
+        <button class="menu-btn" data-section="transactions">💳 Transações</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="exportBtn" class="small-btn">📤 Exportar backup</button>
+        <button id="logoutBtn" class="small-btn">🚪 Sair</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div>
+          <h2 class="page-title">Painel Admin</h2>
+          <p class="page-sub">Visão rápida e ações administrativas</p>
+        </div>
+        <div class="top-actions">
+          <div class="stat small">Usuários: <strong id="statUsers">—</strong></div>
+          <div class="stat small">Pedidos: <strong id="statOrders">—</strong></div>
+          <div class="stat small">Fluxo créditos: <strong id="statFlow">—</strong></div>
+        </div>
+      </header>
+
+      <!-- SECTIONS -->
+      <section id="overview" class="section active">
+        <div class="cards-grid">
+          <div class="card">
+            <p>Total de usuários</p>
+            <h3 id="cardUsers">—</h3>
+          </div>
+          <div class="card">
+            <p>Total de pedidos</p>
+            <h3 id="cardOrders">—</h3>
+          </div>
+          <div class="card">
+            <p>Total fluxo créditos</p>
+            <h3 id="cardFlow">—</h3>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Últimos pedidos</h3>
+          <div id="overviewOrders" class="table-wrapper"></div>
+        </div>
+      </section>
+
+      <section id="users" class="section">
+        <div class="panel">
+          <h3>Usuários</h3>
+          <div class="controls-row">
+            <input id="userSearch" placeholder="Pesquisar por email/username..." />
+            <select id="filterRole">
+              <option value="">Todos os papéis</option>
+              <option value="admin">Admin</option>
+              <option value="empresa">Empresa</option>
+              <option value="cliente">Cliente</option>
+              <option value="entregador">Entregador</option>
+            </select>
+            <button id="refreshUsers" class="small-btn">Atualizar</button>
+          </div>
+
+          <div id="usersTable" class="table-wrapper"></div>
+        </div>
+      </section>
+
+      <section id="orders" class="section">
+        <div class="panel">
+          <h3>Pedidos</h3>
+          <div class="controls-row">
+            <input id="orderSearch" placeholder="Pesquisar por order_id / usuário..." />
+            <select id="orderFilterStatus">
+              <option value="">Todos</option>
+              <option value="pending">pending</option>
+              <option value="out_for_delivery">out_for_delivery</option>
+              <option value="delivered">delivered</option>
+              <option value="canceled">canceled</option>
+            </select>
+            <button id="refreshOrders" class="small-btn">Atualizar</button>
+          </div>
+
+          <div id="ordersTable" class="table-wrapper"></div>
+        </div>
+      </section>
+
+      <section id="enterprises" class="section">
+        <div class="panel">
+          <h3>Empresas</h3>
+          <div class="controls-row">
+            <input id="enterpriseSearch" placeholder="Pesquisar por nome / id..." />
+            <button id="refreshEnterprises" class="small-btn">Atualizar</button>
+          </div>
+
+          <div id="enterprisesTable" class="table-wrapper"></div>
+        </div>
+      </section>
+
+      <section id="transactions" class="section">
+        <div class="panel">
+          <h3>Transações</h3>
+          <div class="controls-row">
+            <input id="txSearch" placeholder="Pesquisar tx_id / usuário..." />
+            <button id="refreshTx" class="small-btn">Atualizar</button>
+          </div>
+
+          <div id="txTable" class="table-wrapper"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- modals -->
+  <div id="modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card">
+      <button id="modalClose" class="modal-close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <template id="userRowTpl">
+    <div class="row">
+      <div class="cell idcol"></div>
+      <div class="cell usercol"></div>
+      <div class="cell rolecol"></div>
+      <div class="cell creditcol"></div>
+      <div class="cell actioncol"></div>
+    </div>
+  </template>
+
+  <template id="orderRowTpl">
+    <div class="row">
+      <div class="cell idcol"></div>
+      <div class="cell usercol"></div>
+      <div class="cell totalcol"></div>
+      <div class="cell statuscol"></div>
+      <div class="cell actioncol"></div>
+    </div>
+  </template>
+
+    <script defer src="{{ url_for('static', filename='scripts/dashboardAdmin.js') }}"></script>
 </body>
 </html>

@@ -8,10 +8,13 @@ main_bp = Blueprint("main", __name__, url_prefix="")
 @main_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json() or {}
-    username = data.get("username")
-    password = data.get("password")
+
     email = data.get("email")
+    password = data.get("password")
     role = data.get("role")
+
+    # Se não vier username, criamos automaticamente
+    username = data.get("username") or email.split("@")[0]
 
     if not username or not password or not email or not role:
         return jsonify({"error": "Dados inválidos"}), 400
@@ -19,12 +22,10 @@ def register():
     db = read_json("Users.json", {"users": []})
     users = db["users"]
 
-    # Verifica duplicados
+    # Evita duplicidade
     for u in users:
         if u["email"].lower() == email.lower():
             return jsonify({"error": "Email já cadastrado"}), 400
-        if u["username"].lower() == username.lower():
-            return jsonify({"error": "Usuário já existe"}), 400
 
     new_user = {
         "id": str(uuid.uuid4()),
@@ -34,8 +35,33 @@ def register():
         "role": role,
         "credits": 0,
         "banned": False,
-        "warnings": 0
+        "warnings": 0,
     }
+
+    # --- Campos extras por tipo ---
+    if role == "empresa":
+        new_user["company_data"] = {
+            "company_name": data.get("company_name"),
+            "cnpj": data.get("cnpj"),
+            "address": data.get("address"),
+            "working_hours": data.get("working_hours"),
+            "phone": data.get("phone"),
+        }
+
+    elif role == "cliente":
+        new_user["client_data"] = {
+            "full_name": data.get("full_name"),
+            "address": data.get("address"),
+            "phone": data.get("phone"),
+        }
+
+    elif role == "entregador":
+        new_user["deliveryman_data"] = {
+            "full_name": data.get("full_name"),
+            "document_id": data.get("document_id"),
+            "phone": data.get("phone"),
+            "vehicle_type": data.get("vehicle_type"),
+        }
 
     users.append(new_user)
     write_json("Users.json", db)
@@ -44,7 +70,6 @@ def register():
         "message": f"Usuário {username} criado com sucesso!",
         "user_id": new_user["id"]
     }), 201
-
 
 @main_bp.route("/login", methods=["POST"])
 def login():
@@ -59,45 +84,32 @@ def login():
     users = db.get("users", [])
 
     for u in users:
-        user_email = u.get("email")
-        if not user_email:
-            # pula registros antigos/íncompletos
-            continue
-
-        if user_email.lower() == email.lower():
+        if u.get("email", "").lower() == email.lower():
             stored = u.get("password_hash") or u.get("password")
-            # tenta verificação com hash seguro primeiro
-            try:
-                if stored and verify_password(password, stored):
-                    if u.get("banned"):
-                        return jsonify({"error": "banned"}), 403
-                    session.update({
-                        "id": u["id"],
-                        "username": u.get("username"),
-                        "role": u.get("role")
-                    })
-                    return jsonify({"message": "logged in", "role": u.get("role")}), 200
-            except Exception:
-                # se verify_password lançar por formato inesperado, tentamos fallback abaixo
-                pass
 
-            # fallback simples: compara plaintext (apenas para compatibilidade com dados antigos)
-            if stored == password:
+            try:
+                valid = verify_password(password, stored)
+            except Exception:
+                valid = stored == password
+
+            if valid:
                 if u.get("banned"):
                     return jsonify({"error": "banned"}), 403
+
                 session.update({
                     "id": u["id"],
                     "username": u.get("username"),
-                    "role": u.get("role")
+                    "role": u.get("role"),
                 })
-                return jsonify({"message": "logged in (fallback)", "role": u.get("role")}), 200
 
-            # se achou o email mas senha está errada
+                return jsonify({
+                    "message": "logged in",
+                    "role": u.get("role"),
+                }), 200
+
             return jsonify({"error": "invalid credentials"}), 401
 
-    # nenhum usuário com esse email
     return jsonify({"error": "invalid credentials"}), 401
-
 
 
 @main_bp.route("/logout", methods=["POST"])

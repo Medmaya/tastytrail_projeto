@@ -1,63 +1,91 @@
+let selectedType = null;
+
+function selectType(type) {
+  selectedType = type;
+  const extra = document.getElementById("extraFields");
+
+  if (type === "empresa") {
+    extra.innerHTML = `
+      <label>Nome da Empresa:</label>
+      <input type="text" name="company_name" required />
+
+      <label>CNPJ:</label>
+      <input type="text" name="cnpj" required />
+
+      <label>Endereço:</label>
+      <input type="text" name="address" required />
+
+      <label>Horário de Funcionamento:</label>
+      <input type="text" name="working_hours" required />
+
+      <label>Telefone:</label>
+      <input type="text" name="phone" required />
+    `;
+  }
+
+  else if (type === "cliente") {
+    extra.innerHTML = `
+      <label>Nome Completo:</label>
+      <input type="text" name="full_name" required />
+
+      <label>Endereço:</label>
+      <input type="text" name="address" required />
+
+      <label>Telefone:</label>
+      <input type="text" name="phone" required />
+    `;
+  }
+
+  else if (type === "entregador") {
+    extra.innerHTML = `
+      <label>Nome Completo:</label>
+      <input type="text" name="full_name" required />
+
+      <label>Documento:</label>
+      <input type="text" name="document_id" required />
+
+      <label>Telefone:</label>
+      <input type="text" name="phone" required />
+
+      <label>Tipo de Veículo:</label>
+      <input type="text" name="vehicle_type" required />
+    `;
+  }
+}
+
+
+
+// ------------ ENVIO PARA O BACKEND -------------
 document.addEventListener("DOMContentLoaded", () => {
-  const step1 = document.getElementById("step1");
-  const step2 = document.getElementById("step2");
-  const step3 = document.getElementById("step3");
-  const continuar1 = document.getElementById("continuar1");
-  const continuar2 = document.getElementById("continuar2");
-  const camposExtras = document.getElementById("camposExtras");
-  const tipoConta = document.getElementById("tipoConta");
-  const form = document.getElementById("register-form");
+  const form = document.getElementById("registerForm");
 
-  continuar1.addEventListener("click", () => {
-    const senha = document.getElementById("senha").value.trim();
-    const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
-
-    if (senha !== confirmarSenha) {
-      alert("As senhas não coincidem! Verifique e tente novamente.");
-      return;
-    }
-
-    // Avança para o próximo passo
-    step1.style.display = "none";
-    step2.style.display = "block";
-  });
-
-  continuar2.addEventListener("click", () => {
-    const tipo = tipoConta.value;
-
-    if (!tipo) {
-      alert("Selecione um tipo de conta.");
-      return;
-    }
-
-    camposExtras.innerHTML = "";
-
-    if (tipo === "cliente") {
-      camposExtras.innerHTML = `
-        <input type="text" placeholder="Endereço" required>
-        <input type="text" placeholder="Número de telefone" required>
-      `;
-    } else if (tipo === "empresa") {
-      camposExtras.innerHTML = `
-        <input type="text" placeholder="Nome da empresa" required>
-        <input type="text" placeholder="CNPJ" required>
-        <input type="text" placeholder="Endereço comercial" required>
-      `;
-    } else if (tipo === "entregador") {
-      camposExtras.innerHTML = `
-        <input type="text" placeholder="Número da CNH" required>
-        <input type="text" placeholder="Veículo (Ex: Moto, Carro, Bike)" required>
-      `;
-    }
-
-    // Mostra o passo final
-    step2.style.display = "none";
-    step3.style.display = "block";
-  });
-
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    alert("Conta criada com sucesso!");
-    // Aqui você pode enviar os dados via fetch() para o backend Python
+
+    if (!selectedType) {
+      alert("Selecione o tipo de conta!");
+      return;
+    }
+
+    const formData = new FormData(form);
+    const json = {};
+
+    for (const [key, value] of formData.entries()) {
+      json[key] = value;
+    }
+
+    json["role"] = selectedType;
+
+    const resp = await fetch("http://127.0.0.1:5000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(json),
+    });
+
+    const data = await resp.json();
+
+    const result = document.getElementById("result");
+    result.style.color = resp.ok ? "green" : "red";
+    result.innerText = data.message || data.error;
   });
 });
