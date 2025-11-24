@@ -85,7 +85,6 @@
           <div class="panel recommended">
             <h3>Recomendados pra você</h3>
             <div id="recommendedGrid" class="recommended-grid">
-              <!-- Cards gerados por JS -->
             </div>
           </div>
         </div>
@@ -115,6 +114,10 @@
       </section>
     </main>
   </div>
+
+  <button id="btnCheckout" class="fab-checkout hidden">
+        🛒 Finalizar Pedido (<span id="cartCounter">0</span>)
+    </button>
 
   <script src="{{ url_for('static', filename='scripts/dashboardCliente.js') }}"></script>
 </body>

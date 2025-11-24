@@ -74,7 +74,7 @@ section {
   border: 0.1vw solid var(--letter);
   background-color: transparent;
   border-radius: 0.4vw;
-  padding: 0.8vw 0.9vw;
+  padding: 1vh 0.9vw;
   width: 17vw;
   margin-left: 20vw;
 }

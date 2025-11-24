@@ -1,7 +1,4 @@
-// dashboardEmpresa.js
-// Consome rotas: /empresa/dashboard, /empresa/products, /empresa/orders, /empresa/payout/request
-// Fornece CRUD básico para produtos (POST /empresa/products, PUT /empresa/products/:id, DELETE /empresa/products/:id)
-// e atualização de status de pedidos (PUT /empresa/orders/<order_id>/status)
+// static/scripts/dashboardEmpresa.js
 
 (function () {
   const root = document.getElementById("empresaRoot");
@@ -15,10 +12,19 @@
   // apply saved theme
   const saved = localStorage.getItem(THEME_KEY) || "light";
   root.setAttribute("data-theme", saved);
-  themeToggle.addEventListener("click", () => {
-    const cur = root.getAttribute("data-theme") === "black" ? "light" : "black";
-    root.setAttribute("data-theme", cur);
-    localStorage.setItem(THEME_KEY, cur);
+  
+  if(themeToggle){
+      themeToggle.addEventListener("click", () => {
+        const cur = root.getAttribute("data-theme") === "black" ? "light" : "black";
+        root.setAttribute("data-theme", cur);
+        localStorage.setItem(THEME_KEY, cur);
+      });
+  }
+
+  // --- LOGOUT ---
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    try { await fetch("/logout", { method: "POST" }); } catch(e){}
+    window.location.href = "/login";
   });
 
   // menu navigation
@@ -27,7 +33,14 @@
     if (!li) return;
     [...menu.querySelectorAll(".menu-item")].forEach(m => m.classList.remove("active"));
     li.classList.add("active");
-    showSection(li.dataset.section);
+    
+    const sectionName = li.dataset.section;
+    showSection(sectionName);
+    
+    // Auto-load content based on section
+    if(sectionName === 'products') loadProducts();
+    if(sectionName === 'orders') loadOrders();
+    if(sectionName === 'payouts') loadPayouts();
   });
 
   function showSection(name) {
@@ -47,24 +60,22 @@
 
   // fetch overview
   async function populateOverview() {
-    // attempt to fetch /empresa/dashboard
     try {
       const resp = await fetch("/empresa/dashboard", { credentials: "same-origin" });
       const data = await jsonOrNull(resp);
       if (data) {
-        document.getElementById("statMonthSales").innerText = (data.total_credits || 0);
+        document.getElementById("statMonthSales").innerText = (data.total_credits_sold || 0);
         document.getElementById("statTotalOrders").innerText = (data.total_orders || 0);
         document.getElementById("statProducts").innerText = (data.total_products || 0);
-        document.getElementById("statClients").innerText = (data.total_clients || "—");
+        document.getElementById("statClients").innerText = "—"; // Não temos essa métrica ainda
         document.getElementById("enterpriseBalance").innerText = (data.balance || 0);
         return;
       }
-    } catch (e) { /* ignore */ }
-    // fallback: placeholders
+    } catch (e) { console.error(e); }
+    
+    // fallback
     document.getElementById("statMonthSales").innerText = "—";
     document.getElementById("statTotalOrders").innerText = "—";
-    document.getElementById("statProducts").innerText = "—";
-    document.getElementById("statClients").innerText = "—";
     document.getElementById("enterpriseBalance").innerText = "—";
   }
 
@@ -76,14 +87,17 @@
   let editingProductId = null;
   const searchProduct = document.getElementById("searchProduct");
 
+  // Botões para abrir modal
   document.getElementById("btnNewProduct").addEventListener("click", () => openProductForm());
-  document.getElementById("createProductBtn").addEventListener("click", () => openProductForm());
-  document.getElementById("openProductsBtn").addEventListener("click", () => {
-    [...menu.querySelectorAll(".menu-item")].forEach(m => m.classList.remove("active"));
-    menu.querySelector('[data-section="products"]').classList.add("active");
-    showSection("products");
-    loadProducts();
+  document.getElementById("createProductBtn").addEventListener("click", () => {
+      // Navega para a aba produtos e abre o form
+      menu.querySelector('[data-section="products"]').click();
+      openProductForm();
   });
+  
+  // Botões de navegação rápida da home
+  document.getElementById("openProductsBtn").addEventListener("click", () => menu.querySelector('[data-section="products"]').click());
+  document.getElementById("openOrdersBtn").addEventListener("click", () => menu.querySelector('[data-section="orders"]').click());
 
   document.getElementById("cancelProduct").addEventListener("click", () => {
     closeProductForm();
@@ -123,6 +137,7 @@
       }
       closeProductForm();
       loadProducts();
+      populateOverview(); // Atualiza contadores
     } catch (err) {
       alert("Erro ao conectar com o servidor");
     }
@@ -160,22 +175,37 @@
     }
   }
 
+  // Helper de imagem (igual cliente)
+  function getImgSrc(prodName) {
+    if (!prodName) return 'https://img.icons8.com/ios/100/meal.png';
+    const cleanName = prodName.split(' ')[0];
+    return `/static/img/${cleanName}.svg`;
+  }
+
   function renderProducts(list) {
     const q = (searchProduct && searchProduct.value || "").toLowerCase();
     const filtered = list.filter(p => !q || (p.name || "").toLowerCase().includes(q));
+    
     if (!filtered.length) {
       productsList.innerHTML = '<p class="muted">Nenhum produto encontrado.</p>'; return;
     }
+    
     productsList.innerHTML = "";
     filtered.forEach(p => {
       const card = document.createElement("div");
       card.className = "product-card";
+      const imgSrc = getImgSrc(p.name);
+      
       card.innerHTML = `
-        <h4>${p.name}</h4>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <img src="${imgSrc}" onerror="this.src='https://img.icons8.com/ios/100/meal.png'" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">
+            <h4 style="margin:0">${p.name}</h4>
+        </div>
         <div class="product-meta">R$ ${p.price_credits || 0} • ${ (p.ingredients||[]).slice(0,3).join(", ") }</div>
+        <p style="font-size:0.8rem; color:#777; margin-bottom:10px;">${p.description || 'Sem descrição'}</p>
         <div class="actions-row">
           <button class="btn small" data-action="edit" data-id="${p.id}">Editar</button>
-          <button class="btn ghost small" data-action="delete" data-id="${p.id}">Excluir</button>
+          <button class="btn ghost small" style="color:var(--danger); border-color:var(--danger);" data-action="delete" data-id="${p.id}">Excluir</button>
         </div>
       `;
       productsList.appendChild(card);
@@ -187,8 +217,8 @@
     if (!btn) return;
     const action = btn.dataset.action;
     const id = btn.dataset.id;
+    
     if (action === "edit") {
-      // fetch product detail from /empresa/products? (we have list locally; fetch again)
       try {
         const resp = await fetch("/empresa/products", { credentials: "same-origin" });
         const list = await jsonOrNull(resp) || [];
@@ -199,9 +229,9 @@
       if (!confirm("Confirma exclusão do produto?")) return;
       try {
         const resp = await fetch(`/empresa/products/${id}`, { method: "DELETE", credentials: "same-origin" });
-        const data = await jsonOrNull(resp);
-        if (!resp.ok) { alert(data && data.error ? data.error : "Erro ao excluir"); return; }
+        if (!resp.ok) { alert("Erro ao excluir"); return; }
         loadProducts();
+        populateOverview();
       } catch { alert("Erro ao conectar com o servidor"); }
     }
   });
@@ -209,67 +239,76 @@
   searchProduct && searchProduct.addEventListener("input", () => loadProducts());
 
   // ---------------- ORDERS ----------------
-  const ordersList = document.getElementById("ordersList");
+  const ordersListDOM = document.getElementById("ordersList"); // Renomeado para evitar conflito
   const filterOrderStatus = document.getElementById("filterOrderStatus");
-  document.getElementById("openOrdersBtn").addEventListener("click", () => {
-    [...menu.querySelectorAll(".menu-item")].forEach(m => m.classList.remove("active"));
-    menu.querySelector('[data-section="orders"]').classList.add("active");
-    showSection("orders");
-    loadOrders();
-  });
+  
   document.getElementById("refreshOrders").addEventListener("click", loadOrders);
   filterOrderStatus && filterOrderStatus.addEventListener("change", loadOrders);
 
   async function loadOrders() {
-    ordersList.innerHTML = '<p class="muted">Carregando pedidos...</p>';
+    ordersListDOM.innerHTML = '<p class="muted">Carregando pedidos...</p>';
     try {
       const resp = await fetch("/empresa/orders", { credentials: "same-origin" });
       let list = await jsonOrNull(resp) || [];
       const statusFilter = (filterOrderStatus && filterOrderStatus.value) || "";
       if (statusFilter) list = list.filter(o => o.status === statusFilter);
+      
+      // Ordena mais recentes
+      list.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      
       renderOrders(list);
     } catch {
-      ordersList.innerHTML = '<p class="muted">Erro ao carregar pedidos.</p>';
+      ordersListDOM.innerHTML = '<p class="muted">Erro ao carregar pedidos.</p>';
     }
   }
 
   function renderOrders(list) {
-    if (!list.length) { ordersList.innerHTML = '<p class="muted">Nenhum pedido encontrado.</p>'; return; }
-    ordersList.innerHTML = "";
+    if (!list.length) { ordersListDOM.innerHTML = '<p class="muted">Nenhum pedido encontrado.</p>'; return; }
+    ordersListDOM.innerHTML = "";
     list.forEach(o => {
       const div = document.createElement("div");
       div.className = "order-card";
+      
+      // Descrição dos itens
+      const itemsDesc = o.items.map(i => `${i.quantity}x ${i.product_name || i.name || 'Item'}`).join(", ");
+      
       div.innerHTML = `
         <div class="order-info">
           <div>
             <strong>#${(o.order_id||"").slice(0,8)}</strong>
-            <div class="meta">${(o.items && o.items[0] && o.items[0].name) || '—'}</div>
-            <div class="meta">Cliente: ${o.user_id || '—'}</div>
+            <div class="meta" style="color:#333; margin-top:4px;">${itemsDesc}</div>
+            <div class="meta">Cliente ID: ${o.user_id ? o.user_id.slice(0,8) : 'Anon'}</div>
           </div>
-          <div class="meta">Total: ${o.total_credits || 0} • ${o.created_at || ''}</div>
+          <div style="text-align:right;">
+             <div class="meta"><strong>${o.total_credits || 0} pts</strong></div>
+             <div class="meta">${o.created_at ? new Date(o.created_at).toLocaleDateString() : ''}</div>
+          </div>
         </div>
-        <div class="order-actions">
-          <select data-order="${o.order_id}" class="status-select">
+        <div class="order-actions" style="margin-top:15px; padding-top:10px; border-top:1px solid #eee;">
+          <select data-order="${o.order_id}" class="status-select" style="padding:5px;">
             <option ${o.status==='pending'?'selected':''} value="pending">Pendente</option>
-            <option ${o.status==='out_for_delivery'?'selected':''} value="out_for_delivery">Em entrega</option>
+            <option ${o.status==='preparing'?'selected':''} value="preparing">Preparando</option>
+            <option ${o.status==='ready_for_pickup'?'selected':''} value="ready_for_pickup">Pronto p/ Retirada</option>
+            <option ${o.status==='out_for_delivery'?'selected':''} value="out_for_delivery">Saiu p/ Entrega</option>
             <option ${o.status==='delivered'?'selected':''} value="delivered">Entregue</option>
             <option ${o.status==='canceled'?'selected':''} value="canceled">Cancelado</option>
           </select>
-          <button class="btn small" data-action="update" data-id="${o.order_id}">Atualizar</button>
+          <button class="btn small" data-action="update" data-id="${o.order_id}">Atualizar Status</button>
         </div>
       `;
-      ordersList.appendChild(div);
+      ordersListDOM.appendChild(div);
     });
   }
 
-  // handle update status
-  ordersList.addEventListener("click", async (e) => {
+  ordersListDOM.addEventListener("click", async (e) => {
     const btn = e.target.closest("button[data-action='update']");
     if (!btn) return;
     const orderId = btn.dataset.id;
     const sel = btn.parentElement.querySelector(".status-select");
     const newStatus = sel && sel.value;
     if (!newStatus) return;
+    
+    btn.innerText = "...";
     try {
       const resp = await fetch(`/empresa/orders/${orderId}/status`, {
         method: "PUT",
@@ -277,10 +316,9 @@
         credentials: "same-origin",
         body: JSON.stringify({status: newStatus})
       });
-      const data = await jsonOrNull(resp);
-      if (!resp.ok) { alert(data && data.error ? data.error : "Erro ao atualizar"); return; }
-      alert("Status atualizado");
-      loadOrders();
+      if (!resp.ok) { alert("Erro ao atualizar"); return; }
+      btn.innerText = "OK";
+      setTimeout(() => loadOrders(), 500);
     } catch { alert("Erro ao conectar com o servidor"); }
   });
 
@@ -290,6 +328,7 @@
     const out = document.getElementById("payoutResult");
     out.innerText = "Enviando...";
     if (!amount || amount <= 0) { out.innerText = "Valor inválido"; return; }
+    
     try {
       const resp = await fetch("/empresa/payout/request", {
         method: "POST",
@@ -299,30 +338,31 @@
       });
       const data = await jsonOrNull(resp);
       if (!resp.ok) { out.innerText = data && data.error ? data.error : "Erro ao solicitar saque"; return; }
-      out.innerText = "Solicitação enviada";
-      loadPayouts();
+      
+      out.innerText = "Solicitação enviada com sucesso!";
+      document.getElementById("payoutAmount").value = "";
+      populateOverview(); // Atualiza saldo
+      loadPayouts();      // Atualiza lista (se implementada no futuro)
     } catch { out.innerText = "Erro ao conectar com o servidor"; }
   });
 
+  // Placeholder para Payouts List (se não tiver endpoint, deixa quieto)
   async function loadPayouts() {
-    try {
-      const resp = await fetch("/empresa/payouts", { credentials: "same-origin" });
-      const list = await jsonOrNull(resp) || [];
-      const div = document.getElementById("payoutsList");
-      if (!list.length) { div.innerHTML = '<p class="muted">Nenhum saque solicitado.</p>'; return; }
-      div.innerHTML = list.map(p => `<div>${p.payout_id.slice(0,8)} — ${p.amount} — ${p.status}</div>`).join("");
-    } catch { document.getElementById("payoutsList").innerHTML = '<p class="muted">Erro ao carregar histórico.</p>'; }
+      // Se tiver rota /empresa/payouts, descomente:
+      /*
+      try {
+        const resp = await fetch("/empresa/payouts"); 
+        const list = await jsonOrNull(resp) || [];
+        // Render list...
+      } catch {}
+      */
   }
 
-  // ---------------- startup ----------------
+  // ---------------- Startup ----------------
   function start() {
     populateOverview();
-    // bind quick loads
-    loadProducts();
-    loadOrders();
-    loadPayouts();
-    // default view already overview
-    showSection("overview");
+    // Carrega produtos em background para agilizar
+    loadProducts(); 
   }
 
   start();

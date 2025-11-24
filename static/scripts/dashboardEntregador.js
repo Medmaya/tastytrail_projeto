@@ -1,13 +1,12 @@
-// entregador.js
-// Fetching endpoints using session cookies: credentials 'same-origin'
-const API_ROOT = ""; // mesma origem
+// static/scripts/dashboardEntregador.js
+
+const API_ROOT = "";
 
 document.addEventListener("DOMContentLoaded", () => {
   initMenu();
   bindButtons();
   loadAll();
-  // poll a cada 12s
-  setInterval(loadAssignedAndBalance, 12000);
+  setInterval(loadAll, 15000);
 });
 
 function initMenu() {
@@ -15,223 +14,190 @@ function initMenu() {
     btn.addEventListener("click", (e) => {
       document.querySelectorAll(".menu-btn").forEach(b=>b.classList.remove("active"));
       btn.classList.add("active");
-      const s = btn.dataset.section;
-      document.querySelectorAll(".section").forEach(sec=>{
-        sec.classList.toggle("active", sec.id === s);
+      
+      const section = btn.dataset.section;
+      document.querySelectorAll(".section").forEach(sec => {
+        sec.classList.toggle("active", sec.id === section);
       });
-      // alterar titulo
-      document.querySelector(".page-title").innerText = btn.innerText.replace(/^[^\s]+\s*/, '');
+      
+      const titles = {'overview':'Início', 'ongoing':'Em Andamento', 'available':'Disponíveis', 'history':'Histórico'};
+      document.querySelector(".page-title").innerText = titles[section] || "Painel";
+      
+      if(section === 'available') loadAvailable();
+      if(section === 'history') loadHistory();
     });
   });
-  document.getElementById("refreshBtn").addEventListener("click", loadAll);
-  document.getElementById("logoutBtn")?.addEventListener("click", logout);
+
+  document.getElementById("refreshBtn").addEventListener("click", () => {
+      const btn = document.getElementById("refreshBtn");
+      btn.innerText = "...";
+      loadAll().then(() => btn.innerText = "Atualizar");
+  });
+  
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await fetch('/logout', {method:'POST'});
+      window.location.href = '/';
+  });
 }
 
 function bindButtons(){
-  // delegated events for accept/complete (buttons created dynamically)
   document.addEventListener("click", async (ev) => {
-    const accept = ev.target.closest(".btn-accept");
-    if (accept) {
-      const card = accept.closest(".order-card");
-      const id = card.dataset.orderId;
-      await acceptOrder(id, card);
+    const acceptBtn = ev.target.closest(".btn-accept");
+    if (acceptBtn) {
+      const card = acceptBtn.closest(".order-card");
+      await acceptOrder(card.dataset.orderId);
       return;
     }
-    const complete = ev.target.closest(".btn-complete");
-    if (complete) {
-      const card = complete.closest(".order-card");
-      const id = card.dataset.orderId;
-      await completeOrder(id, card);
+    const completeBtn = ev.target.closest(".btn-complete");
+    if (completeBtn) {
+      if(!confirm("Confirmar entrega realizada?")) return;
+      const card = completeBtn.closest(".order-card");
+      await completeOrder(card.dataset.orderId);
       return;
     }
   });
 }
 
+// --- API CALLS ---
+
 async function loadAll(){
-  await Promise.all([loadAssignedAndBalance(), loadAvailable(), loadHistory()]);
-  renderChart([]);
+  await Promise.all([loadAssignedAndBalance(), loadAvailable()]);
 }
 
-// FETCH assigned orders + balance
 async function loadAssignedAndBalance(){
   try {
-    const [assignedResp, balResp] = await Promise.all([
-      fetch(API_ROOT + "/entregador/assigned", { credentials: 'same-origin' }),
-      fetch(API_ROOT + "/entregador/balance", { credentials: 'same-origin' })
-    ]);
-    if (assignedResp.ok) {
-      const assigned = await assignedResp.json();
-      renderAssigned(assigned);
-    } else {
-      renderAssigned([]);
+    const balResp = await fetch(API_ROOT + "/entregador/balance", { credentials: 'same-origin' });
+    if(balResp.ok) {
+        const bal = await balResp.json();
+        document.getElementById("balanceValue").innerText = `R$ ${(bal.balance || 0).toFixed(2)}`;
+        document.getElementById("monthEarnings").innerText = `R$ ${(bal.balance || 0).toFixed(2)}`;
     }
 
-    if (balResp.ok) {
-      const b = await balResp.json();
-      document.getElementById("balanceValue").innerText = `R$ ${b.balance || 0}`;
-    } else {
-      document.getElementById("balanceValue").innerText = "R$ —";
-    }
-  } catch (err) {
-    console.error("Erro carregar assigned/balance:", err);
-  }
+    const assignedResp = await fetch(API_ROOT + "/entregador/assigned", { credentials: 'same-origin' });
+    const list = assignedResp.ok ? await assignedResp.json() : [];
+    const ongoing = list.filter(o => o.status !== 'delivered' && o.status !== 'canceled');
+    
+    document.getElementById("todayCount").innerText = ongoing.length;
+    renderAssigned(ongoing);
+  } catch (err) { console.error(err); }
 }
 
 async function loadAvailable(){
-  // tenta rota opcional /entregador/available — se não existir, oculta painel
   try {
     const resp = await fetch(API_ROOT + "/entregador/available", { credentials: 'same-origin' });
     const note = document.getElementById("availableNote");
-    const list = document.getElementById("availableList");
+    const listEl = document.getElementById("availableList");
+    
     if (!resp.ok) {
-      note.innerText = "Sem rota de pedidos disponíveis no backend (recurso opcional).";
-      list.hidden = true;
+      note.innerText = "Nenhum pedido na região.";
+      listEl.innerHTML = "";
       return;
     }
-    const data = await resp.json();
+    
+    const list = await resp.json();
     note.hidden = true;
-    list.hidden = false;
-    renderAvailable(data);
-  } catch (err) {
-    // rota não existe / erro CORS / 404 — exibe nota
-    document.getElementById("availableNote").innerText = "Pedidos disponíveis não implementados no backend.";
-    document.getElementById("availableList").hidden = true;
-  }
+    listEl.hidden = false;
+    renderAvailable(list);
+  } catch (err) { document.getElementById("availableNote").innerText = "Erro ao buscar pedidos."; }
 }
 
 async function loadHistory(){
-  // aqui reusa assigned como base (apenas demo) — idealmente backend fornece /entregador/history
-  try {
-    const resp = await fetch(API_ROOT + "/entregador/assigned", { credentials: 'same-origin' });
-    if (!resp.ok) return renderHistory([]);
-    const data = await resp.json();
-    // marcar only delivered orders for history? fallback: empty
-    const hist = (data || []).filter(o => o.status === "delivered");
-    renderHistory(hist);
-  } catch (err) {
-    renderHistory([]);
-  }
+    try {
+        const resp = await fetch(API_ROOT + "/entregador/assigned", { credentials: 'same-origin' });
+        if(!resp.ok) return;
+        const list = await resp.json();
+        const history = list.filter(o => o.status === 'delivered' || o.status === 'canceled');
+        renderHistory(history);
+    } catch(e){}
 }
 
-function cardFromOrder(o, isAssigned = false){
-  const tpl = document.getElementById("orderCardTpl").content.cloneNode(true);
-  const container = tpl.querySelector(".order-card");
-  container.dataset.orderId = o.order_id || o.orderId || o.id || o.orderId;
-  tpl.querySelector(".order-id").innerText = `#${o.order_id || o.orderId || o.id || '—'}`;
-  tpl.querySelector(".order-info").innerText = (o.items && o.items.length) ? `${o.items.length} item(s)` : (o.description || "Pedido");
-  tpl.querySelector(".order-address").innerText = o.address || o.delivery_address || o.address_line || (o.items && o.items[0] && o.items[0].address) || "Endereço não informado";
-  tpl.querySelector(".order-meta").innerText = `Status: ${o.status || '—'}`;
-  // buttons visibility
-  const acceptBtn = tpl.querySelector(".btn-accept");
-  const completeBtn = tpl.querySelector(".btn-complete");
-  if (isAssigned) {
-    acceptBtn.style.display = "none";
-    completeBtn.style.display = "";
-  } else {
-    acceptBtn.style.display = "";
-    completeBtn.style.display = "none";
-  }
-  return tpl;
+async function acceptOrder(orderId){
+  try {
+    const resp = await fetch(`/entregador/assign/${orderId}`, { method: 'POST', credentials: 'same-origin' });
+    if (!resp.ok) { alert('Erro ao aceitar pedido.'); return; }
+    
+    alert("Pedido aceito! Vá para a aba 'Em andamento'.");
+    loadAll();
+    document.querySelector('[data-section="ongoing"]').click();
+  } catch (err) { alert('Erro de conexão.'); }
+}
+
+async function completeOrder(orderId){
+  try {
+    const resp = await fetch(`/entregador/complete/${orderId}`, { method: 'POST', credentials: 'same-origin' });
+    if (!resp.ok) { alert('Erro ao finalizar entrega.'); return; }
+    
+    const data = await resp.json();
+    // AQUI: Mostra o valor retornado pelo backend
+    alert(`Entrega concluída! Você recebeu R$ ${data.earned || 5}`); 
+    loadAll();
+  } catch (err) { alert('Erro de conexão.'); }
+}
+
+// --- RENDER FUNCTIONS ---
+
+function createCardHTML(o, type) {
+    const itemsCount = o.items ? o.items.length : 0;
+    // AQUI: Usa o campo client_address enviado pelo backend
+    const address = o.client_address || "Endereço não disponível"; 
+    const entName = o.enterprise_name || (o.items && o.items[0] && o.items[0].enterprise_name) || "Restaurante";
+    const fee = o.delivery_fee || 5;
+
+    let buttonsHTML = "";
+    if (type === 'available') {
+        buttonsHTML = `<button class="btn btn-accept">Aceitar Entrega (+ R$ ${fee})</button>`;
+    } else if (type === 'ongoing') {
+        buttonsHTML = `<button class="btn btn-complete">Concluir Entrega</button>`;
+    }
+
+    return `
+        <div class="order-card" data-order-id="${o.order_id}">
+            <div class="order-line">
+                <div>
+                    <p class="order-id">#${o.order_id.slice(0,8)}</p>
+                    <p class="order-info">${entName} • ${itemsCount} item(s)</p>
+                </div>
+                <div>
+                    <p class="order-meta" style="color:var(--primary); font-weight:bold;">R$ ${fee}</p>
+                </div>
+            </div>
+            <p class="order-address">📍 ${address}</p>
+            <p class="order-meta" style="margin-bottom:10px;">Status: ${o.status}</p>
+            <div class="order-actions">
+                ${buttonsHTML}
+            </div>
+        </div>
+    `;
 }
 
 function renderAssigned(list){
   const el = document.getElementById("ongoingList");
-  el.innerHTML = "";
-  if (!list || list.length === 0) {
-    el.innerHTML = `<div class="muted">Nenhuma entrega atribuída no momento.</div>`;
-    return;
-  }
-  list.forEach(o => {
-    el.appendChild(cardFromOrder(o, true));
-  });
+  if (!list.length) { el.innerHTML = `<div class="muted">Você não tem entregas ativas.</div>`; return; }
+  el.innerHTML = list.map(o => createCardHTML(o, 'ongoing')).join("");
 }
 
 function renderAvailable(list){
   const el = document.getElementById("availableList");
-  el.innerHTML = "";
-  if (!list || list.length === 0) {
-    el.innerHTML = `<div class="muted">Nenhum pedido disponível agora.</div>`;
-    return;
-  }
-  list.forEach(o => el.appendChild(cardFromOrder(o, false)));
+  if (!list.length) { el.innerHTML = `<div class="muted">Nenhum pedido aguardando entregador.</div>`; return; }
+  el.innerHTML = list.map(o => createCardHTML(o, 'available')).join("");
 }
 
 function renderHistory(list){
   const el = document.getElementById("historyList");
-  el.innerHTML = "";
-  if (!list || list.length === 0) {
-    el.innerHTML = `<div class="muted">Nenhum histórico encontrado.</div>`;
-    return;
-  }
-  list.forEach(o => {
-    const node = cardFromOrder(o, true);
-    // hide actions
-    node.querySelector(".order-actions").remove();
-    el.appendChild(node);
-  });
+  if (!list.length) { el.innerHTML = `<div class="muted">Histórico vazio.</div>`; return; }
+  const sorted = list.slice().reverse();
+  el.innerHTML = sorted.map(o => createCardHTML(o, 'history')).join("");
 }
 
-async function acceptOrder(orderId, cardEl){
-  try {
-    const resp = await fetch(`/entregador/assign/${orderId}`, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {'Content-Type':'application/json'}
+// Chart placeholder
+const ctx = document.getElementById('earningsChart');
+if(ctx && typeof Chart !== 'undefined') {
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+            datasets: [{ label: 'Ganhos (R$)', data: [0, 5, 10, 0, 20, 5, 15], backgroundColor: '#27ae60' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
     });
-    if (!resp.ok) {
-      const d = await resp.json().catch(()=>({error:'erro'}));
-      alert(d.error || 'Erro ao aceitar pedido');
-      return;
-    }
-    const d = await resp.json();
-    // move card to ongoing list
-    loadAssignedAndBalance();
-    loadAvailable();
-  } catch (err) {
-    console.error(err);
-    alert('Erro ao aceitar pedido');
-  }
-}
-
-async function completeOrder(orderId, cardEl){
-  try {
-    const resp = await fetch(`/entregador/complete/${orderId}`, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {'Content-Type':'application/json'}
-    });
-    if (!resp.ok) {
-      const d = await resp.json().catch(()=>({error:'erro'}));
-      alert(d.error || 'Erro ao completar pedido');
-      return;
-    }
-    loadAssignedAndBalance();
-    loadHistory();
-  } catch (err) {
-    console.error(err);
-    alert('Erro ao completar pedido');
-  }
-}
-
-function renderChart(dataPoints){
-  // exemplo demo: random ou dataPoints
-  const labels = ['6d','5d','4d','3d','2d','1d','hoje'];
-  const data = dataPoints.length ? dataPoints : [40,60,20,90,45,70,120];
-  const ctx = document.getElementById('earningsChart');
-  if (!ctx) return;
-  if (ctx.chart) {
-    ctx.chart.data.datasets[0].data = data;
-    ctx.chart.update();
-    return;
-  }
-  ctx.chart = new Chart(ctx, {
-    type:'bar',
-    data:{labels, datasets:[{label:'R$', data, backgroundColor:'rgba(255,107,0,0.9)'}]},
-    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
-  });
-}
-
-async function logout(){
-  await fetch('/logout', {method:'POST', credentials: 'same-origin'});
-  window.location.href = '/';
 }

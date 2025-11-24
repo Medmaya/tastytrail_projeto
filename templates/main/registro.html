@@ -3,69 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style/style.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style/registro.css') }}"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap"
-      rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/registro.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap" rel="stylesheet"/>
     <title>Tasty Trail - Registrar</title>
+    
+    <style>
+      input, textarea, select {
+        text-transform: none !important;
+      }
+      .input-error {
+        border: 2px solid #e74c3c !important;
+        background-color: #fce4e4;
+      }
+    </style>
   </head>
   
   <body>
     <header class="header">
-      <section>
-        <a href="/" class="logo">
-          <img
-            src="{{ url_for('static', filename='img/Logo.svg') }}"
-            alt="logo"
-            class="logotipo"
-          />
-        </a>
-
+        <section>
+        <a href="/" class="logo"><img src="{{ url_for('static', filename='img/Logo.svg') }}" alt="logo" class="logotipo" /></a>
         <nav class="navbar">
           <a href="/">Início</a>
           <a href="/produtos">Produtos</a>
           <a href="/contatos">Contatos</a>
           <a href="/sobre">Sobre</a>
         </nav>
-
         <form class="searchbox" action="/buscar" method="get">
-          <input
-            type="search"
-            name="q"
-            placeholder="O que você quer comer hoje?"
-          />
-          <button type="submit">
-            <img
-              width="20"
-              height="20"
-              src="https://img.icons8.com/forma-thin/20/search.png"
-              alt="search"
-            />
-          </button>
+          <input type="search" name="q" placeholder="O que você quer comer hoje?" style="text-transform: none;" />
+          <button type="submit"><img width="20" height="20" src="https://img.icons8.com/forma-thin/20/search.png" alt="search" /></button>
         </form>
-
         <div class="icons">
-          <a href="/login">
-            <img
-              src="{{ url_for('static', filename='img/Person.svg') }}"
-              id="person"
-              alt="person"
-            />
-          </a>
-          <a href="">
-            <img
-              src="{{ url_for('static', filename='img/Cart.svg') }}"
-              id="cart"
-              alt="Cart"
-            />
-          </a>
+          <a href="/login"><img src="{{ url_for('static', filename='img/Person.svg') }}" id="person" alt="person" /></a>
+          <a href=""><img src="{{ url_for('static', filename='img/Cart.svg') }}" id="cart" alt="Cart" /></a>
         </div>
       </section>
     </header>
@@ -75,98 +45,35 @@
         <div class="register-box">
           <h1>Bem-vindo(a)</h1>
           <p>Crie sua conta</p>
-          <p class="login-text">
-            Já tem uma conta? <a href="/login">Faça login</a>
-          </p>
+          <p class="login-text">Já tem uma conta? <a href="/login">Faça login</a></p>
+          
           <h2>Sou um(a) :</h2>
 
           <div style="margin-top: 2vw">
-            <button
-              type="button"
-              class="select-type-btn"
-              onclick="selectType('empresa')"
-            >
-              Empresa
-            </button>
-            <button
-              type="button"
-              class="select-type-btn"
-              onclick="selectType('cliente')"
-            >
-              Cliente
-            </button>
-            <button
-              type="button"
-              class="select-type-btn"
-              onclick="selectType('entregador')"
-            >
-              Entregador
-            </button>
+            <button type="button" class="select-type-btn" onclick="selectType('empresa')">Empresa</button>
+            <button type="button" class="select-type-btn" onclick="selectType('cliente')">Cliente</button>
+            <button type="button" class="select-type-btn" onclick="selectType('entregador')">Entregador</button>
           </div>
 
-          <form id="registerForm" method="POST" action="/registrar" style="margin-top: 2vw">
+          <form id="registerForm" method="POST" action="/registrar" style="margin-top: 2vw" novalidate>
             <label>Email:</label>
-            <input type="email" name="email" required />
+            <input type="email" name="email" required maxlength="100" placeholder="ex: joao@gmail.com" />
 
             <label>Senha:</label>
-            <input type="password" name="password" required />
+            <input type="password" name="password" required minlength="6" maxlength="50" placeholder="Mínimo 6 caracteres" />
 
             <div id="extraFields"></div>
 
             <button type="submit" style="margin-top: 20px">Registrar</button>
           </form>
 
-          <p id="result" style="margin-top: 15px; font-weight: bold"></p>
+          <p id="result" style="margin-top: 15px; font-weight: bold; min-height: 1.5em;"></p>
         </div>
       </div>
     </main>
 
     <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-left">
-          <img
-            id="text-logo"
-            src="{{ url_for('static', filename='img/Group 1.svg') }}"
-            alt="text-logo"
-          />
-          <div class="socials">
-            <a href="#"
-              ><img
-                src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png"
-                alt="facebook"
-            /></a>
-            <a href="#"
-              ><img
-                src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png"
-                alt="instagram"
-            /></a>
-            <a href="#"
-              ><img
-                src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png"
-                alt="twitter"
-            /></a>
-          </div>
-        </div>
-
-        <div class="footer-center">
-          <h3>Information</h3>
-          <ul>
-            <li><a href="#">Produtos</a></li>
-            <li><a href="#">Contatos</a></li>
-            <li><a href="#">Sobre</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-right">
-          <h3>Precisa de ajuda?</h3>
-          <p>tastytrail@gmail.com</p>
-          <p>11 98334 9999</p>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>2025 all Right Reserved</p>
-      </div>
+       <div class="footer-bottom"><p>2025 all Right Reserved</p></div>
     </footer>
 
     <script src="{{ url_for('static', filename='scripts/registro.js') }}"></script>

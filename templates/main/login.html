@@ -3,25 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style/login.css') }}"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap"
-      rel="stylesheet" />
-      <title>Tasty Trail - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap" rel="stylesheet" />
+    <title>Tasty Trail - Login</title>
+    
+    <style>
+      input {
+        text-transform: none !important; 
+      }
+      .input-error {
+        border: 2px solid red !important;
+      }
+    </style>
   </head>
 
   <body>
     <header class="header">
       <section>
         <a href="/" class="logo">
-          <img
-            src="{{ url_for('static', filename='img/Logo.svg') }}"
-            alt="logo"
-            class="logotipo"
-          />
+          <img src="{{ url_for('static', filename='img/Logo.svg') }}" alt="logo" class="logotipo" />
         </a>
 
         <nav class="navbar">
@@ -32,37 +32,15 @@
         </nav>
 
         <form class="searchbox" action="/buscar" method="get">
-          <input
-            type="search"
-            name="q"
-            placeholder="O que você quer comer hoje?"
-            autocomplete="off"
-          />
+          <input type="search" name="q" placeholder="O que você quer comer hoje?" autocomplete="off" style="text-transform: none;" />
           <button type="submit">
-            <img
-              width="20"
-              height="20"
-              src="https://img.icons8.com/forma-thin/20/search.png"
-              alt="search"
-            />
+            <img width="20" height="20" src="https://img.icons8.com/forma-thin/20/search.png" alt="search" />
           </button>
         </form>
 
         <div class="icons">
-          <a href="/login">
-            <img
-              src="{{ url_for('static', filename='img/Person.svg') }}"
-              id="person"
-              alt="person"
-            />
-          </a>
-          <a href="">
-            <img
-              src="{{ url_for('static', filename='img/Cart.svg') }}"
-              id="cart"
-              alt="Cart"
-            />
-          </a>
+          <a href="/login"><img src="{{ url_for('static', filename='img/Person.svg') }}" id="person" alt="person" /></a>
+          <a href=""><img src="{{ url_for('static', filename='img/Cart.svg') }}" id="cart" alt="Cart" /></a>
         </div>
       </section>
     </header>
@@ -76,24 +54,12 @@
           <form id="loginForm" action="/login" method="POST">
             <div class="field">
               <label for="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                autocomplete="email"
-                required
-              />
+              <input type="email" id="email" name="email" autocomplete="email" required maxlength="100" placeholder="seu@email.com" />
             </div>
 
             <div class="field">
               <label for="password">Senha:</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                autocomplete="current-password"
-                required
-              />
+              <input type="password" id="password" name="password" autocomplete="current-password" required minlength="6" maxlength="50" />
             </div>
 
             <a class="forgot" href="#">Esqueceu sua senha?</a>
@@ -105,6 +71,8 @@
             Não tem uma conta?
             <a href="/registro">Crie agora</a>
           </p>
+          
+          <p id="loginResult" style="margin-top: 10px; font-weight: bold; text-align: center; min-height: 20px;"></p>
         </div>
       </div>
     </main>
@@ -112,30 +80,10 @@
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-left">
-          <img
-            id="text-logo"
-            src="{{ url_for('static', filename='img/Group 1.svg') }}"
-            alt="text-logo"
-          />
+          <img id="text-logo" src="{{ url_for('static', filename='img/Group 1.svg') }}" alt="text-logo" />
           <div class="socials">
-            <a href="#"
-              ><img
-                src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png"
-                alt="facebook"
-            /></a>
-            <a href="#"
-              ><img
-                src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png"
-                alt="instagram"
-            /></a>
-            <a href="#"
-              ><img
-                src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png"
-                alt="twitter"
-            /></a>
-          </div>
+             </div>
         </div>
-
         <div class="footer-center">
           <h3>Informações</h3>
           <ul>
@@ -144,14 +92,12 @@
             <li><a href="#">Sobre</a></li>
           </ul>
         </div>
-
         <div class="footer-right">
           <h3>Precisa de ajuda?</h3>
           <p>tastytrail@gmail.com</p>
           <p>11 98334 9999</p>
         </div>
       </div>
-
       <div class="footer-bottom">
         <p>2025 - Todos os direitos reservados</p>
       </div>

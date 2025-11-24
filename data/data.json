@@ -1,22 +1,774 @@
 {
   "users": [
     {
-      "id": "66c1b643-854b-485f-879b-c63d300e19bc",
-      "username": "cliente10",
-      "email": "cliente10@gmail.com",
-      "password_hash": "4BGfP9JZJAIVLPCN1YP+zs+Bg1ELoUO0JhlEFe25wsAzyLbWv6A/8Uo7io91/oCc",
+      "id": "cd67fc98-3239-4b38-8fdd-1540f2a97bb0",
+      "username": "cliente03",
+      "email": "cliente03@gmail.com",
+      "password_hash": "6ROSzEeRhOOOv5d/Zn4nGGRY1o4HDSMoEu15LGaFCE70Rq7x74S274U00bsbGRAU",
       "role": "cliente",
       "credits": 0,
       "banned": false,
       "warnings": 0,
+      "created_at": "2025-11-24T18:25:09.321228Z",
       "client_data": {
-        "full_name": "Cliente 10",
-        "address": "Travessa Airton Teodoro, 200",
-        "phone": "11998403000"
+        "full_name": "",
+        "address": "",
+        "phone": ""
+      }
+    },
+    {
+      "id": "c9009c21-4ae3-4f91-8743-c06cb5069dbe",
+      "username": "admin",
+      "email": "admin@tasty.com",
+      "password_hash": "M08WpHaGDW8V3OsLTo28C+kdIMH3mfYz014OJ45d986u+OzKIViX9Dp2xpzj+jy4",
+      "role": "admin",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:06.398905Z"
+    },
+    {
+      "id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "username": "empresa0",
+      "email": "empresa0@tasty.com",
+      "password_hash": "tq9p+hxkfS7CTfu7uA5fyLg5W2O8knkNNFRZB5CZtrHBJtZEwzrHA46AxbfxMJHw",
+      "role": "empresa",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:06.433021Z",
+      "company_data": {
+        "company_name": "Burguer Kingo 82",
+        "cnpj": "75.146.681/0001-98",
+        "address": "Rua Teste",
+        "working_hours": "08:00 - 22:00",
+        "phone": "(11) 97279-8836"
+      }
+    },
+    {
+      "id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+      "username": "empresa1",
+      "email": "empresa1@tasty.com",
+      "password_hash": "AD125ZcL4uTHCxCO6HBclYV6NxfZroo0oooyeZ5Uzw5B0AgSs80U6CQ+ZnkF71XL",
+      "role": "empresa",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:06.540446Z",
+      "company_data": {
+        "company_name": "Pizzaria do Mario 71",
+        "cnpj": "86.758.893/0001-85",
+        "address": "Rua Teste",
+        "working_hours": "08:00 - 22:00",
+        "phone": "(11) 96958-6997"
+      }
+    },
+    {
+      "id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+      "username": "empresa2",
+      "email": "empresa2@tasty.com",
+      "password_hash": "MkHhxac0nbvmYRN9ETp/wbKqUb1QVvY2XGyx0EDE7v+0E54RwiFpXVSCmUjf68uJ",
+      "role": "empresa",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:06.673098Z",
+      "company_data": {
+        "company_name": "Sushizeiro 46",
+        "cnpj": "31.454.953/0001-18",
+        "address": "Rua Teste",
+        "working_hours": "08:00 - 22:00",
+        "phone": "(11) 99731-5163"
+      }
+    },
+    {
+      "id": "55ba6c8c-0aab-4613-a4a4-1d5c63297429",
+      "username": "cliente_novo0",
+      "email": "cliente_novo0@gmail.com",
+      "password_hash": "Ob+JOV/Yso4735ugBlglwiYAjmpSANkw8E+VGTWwaOj9RujTJGIyMEwl2FK2blmX",
+      "role": "cliente",
+      "credits": 443,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:07.131316Z",
+      "client_data": {
+        "full_name": "Cliente 0",
+        "address": "Rua Casa",
+        "phone": "(11) 92936-1190"
+      }
+    },
+    {
+      "id": "d6a20262-df94-49d6-8305-363e3dd3dd22",
+      "username": "cliente_novo1",
+      "email": "cliente_novo1@gmail.com",
+      "password_hash": "ZrMM3mokIA6r4V4h4n4tU/lKkzfv6ZW6/NdTYa3G72Ut8h1H7LK/nEXVv+OfR1tT",
+      "role": "cliente",
+      "credits": 437,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:07.242539Z",
+      "client_data": {
+        "full_name": "Cliente 1",
+        "address": "Rua Casa",
+        "phone": "(11) 99139-6909"
+      }
+    },
+    {
+      "id": "5654bc10-c8b1-4ab9-b4e5-4287db1944d5",
+      "username": "cliente_novo2",
+      "email": "cliente_novo2@gmail.com",
+      "password_hash": "tP+ajXqmq1TzVPT6pmqZTQbAcFR6L2EsswZMXP4nP4TChnIErwaSvN5wbzpJ8n86",
+      "role": "cliente",
+      "credits": 438,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:07.360652Z",
+      "client_data": {
+        "full_name": "Cliente 2",
+        "address": "Rua Casa",
+        "phone": "(11) 99420-9077"
+      }
+    },
+    {
+      "id": "43ebd773-23cf-43c5-a073-807a699cbcfc",
+      "username": "cliente_novo3",
+      "email": "cliente_novo3@gmail.com",
+      "password_hash": "kXjWSNBMZyGgzCy3DDl6TZi3Zu1PYsydUdMZwQpM/ZjuGz5f7ZfsCV7V/S5RbGhL",
+      "role": "cliente",
+      "credits": 463,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:07.467326Z",
+      "client_data": {
+        "full_name": "Cliente 3",
+        "address": "Rua Casa",
+        "phone": "(11) 93898-5546"
+      }
+    },
+    {
+      "id": "7fff3e29-60c6-4c56-8ee4-f5512f09d1de",
+      "username": "cliente_novo4",
+      "email": "cliente_novo4@gmail.com",
+      "password_hash": "pyomSICzNAJp//jDKkA8CCY6jZPiGtnx7a+3mebmsQC6r4lX9WEGpx/5tshAyRkV",
+      "role": "cliente",
+      "credits": 436,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:28:07.589523Z",
+      "client_data": {
+        "full_name": "Cliente 4",
+        "address": "Rua Casa",
+        "phone": "(11) 92110-8882"
+      }
+    },
+    {
+      "id": "9237e6d4-66a9-4670-9d81-13b28a6d1ebd",
+      "username": "Boss",
+      "email": "admin01@tasty.com",
+      "password_hash": "hepxESLcchOYwHsqh8N6Kl7tnwQENA6cjs5F1zr2TFF6zGWetFCkNVIwsahSgPab",
+      "role": "admin",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:30:34.541949Z"
+    },
+    {
+      "id": "78b11a33-12e9-429c-9821-9a365fb873aa",
+      "username": "Boss",
+      "email": "admin02@tasty.com",
+      "password_hash": "bu59e7jNEaI4YSO5pecKJ+DtHnyQjSK8/w22WAumofQEt5eA21FwnZ7Mq2NrDpn5",
+      "role": "admin",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:31:15.762790Z"
+    },
+    {
+      "id": "8fcb1a22-7705-434d-8391-d5ae5fb76f75",
+      "username": "cliente",
+      "email": "cliente@gmail.com",
+      "password_hash": "K03IzZ1Hg17BTD8rP8wBpSOBtjprWOjtf1rbf5Zx42eLiaUUbcOPKXdQ5846zDkB",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T18:31:21.777070Z",
+      "client_data": {
+        "full_name": "Mayara Medeiros",
+        "address": "Rua Adriano 24",
+        "phone": "11 941359190"
+      }
+    },
+    {
+      "id": "bd5b6abd-020c-400f-b71a-ddde85eb85aa",
+      "username": "empresa",
+      "email": "empresa@gmail.com",
+      "password_hash": "mRGgMAQRjTIF+Rn/hfzImSaXDCTgOYifbfMB4LDUHlIsErt5KoQ1mq63/zwX/jOK",
+      "role": "empresa",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T19:00:08.164476Z",
+      "company_data": {
+        "company_name": "Rio Branco",
+        "cnpj": "00.623.904/0001-73",
+        "address": "Granja Viana",
+        "working_hours": "19:00",
+        "phone": "11941359190"
+      }
+    },
+    {
+      "id": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "username": "entregador20",
+      "email": "entregador20@gmail.com",
+      "password_hash": "paCMGpP55uUvnxOSIj25qgXx0fWCiCy951Vfdd0w8Wijnra5x9aJ67GmFRoWNuIy",
+      "role": "entregador",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T19:00:37.899986Z",
+      "deliveryman_data": {
+        "full_name": "Algum Entregador",
+        "document_id": "449.957.772-27",
+        "phone": "11998403000",
+        "vehicle_type": "Triciclo"
+      }
+    },
+    {
+      "id": "594bb0a3-bdce-4ef5-8deb-4a21a3e4e417",
+      "username": "entregador",
+      "email": "entregador@gmail.com",
+      "password_hash": "6Bs4+FiOwuPPZLZwwnDu5c7CYHiu1JVwSvN401lBFhacoyd6Lt9heopj4hqgQ238",
+      "role": "entregador",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T19:05:20.239649Z",
+      "deliveryman_data": {
+        "full_name": "Vitor Lima",
+        "document_id": "48376797816",
+        "phone": "11941359066",
+        "vehicle_type": "Moto"
+      }
+    },
+    {
+      "id": "338d4c1d-1d64-4765-84e6-58d9b1d17d13",
+      "username": "teste",
+      "email": "teste01@gmail.com",
+      "password_hash": "5zYv+jGNExGgJOXCtPytiGmKslmMYHbZX9N3GfiHhbfo9e5v2tWTCKpZ3JufvXtF",
+      "role": "cliente",
+      "credits": 875,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T19:08:11.124493Z",
+      "client_data": {
+        "full_name": "Primeiro Cliente no Front!",
+        "address": "",
+        "phone": ""
       }
     }
   ],
-  "orders": [],
-  "transactions": [],
-  "enterprises": []
+  "orders": [
+    {
+      "order_id": "92d9a14c-c78e-4d15-8252-6d01adf7bbd7",
+      "user_id": "55ba6c8c-0aab-4613-a4a4-1d5c63297429",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "ce3b5588-b471-4549-a08e-4f2ae17fb49b",
+          "product_name": "Pudim",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 52,
+          "added_at": "2025-11-24T18:28:07.187045Z"
+        }
+      ],
+      "subtotal": 52,
+      "delivery_fee": 5,
+      "total_credits": 57,
+      "status": "delivered",
+      "created_at": "2025-11-24T18:28:07.215547Z",
+      "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "picked_at": "2025-11-24T19:03:58.011087Z",
+      "delivered_at": "2025-11-24T19:04:08.424210Z"
+    },
+    {
+      "order_id": "ffb13fce-d52b-4f10-b469-fbfa11acb2d0",
+      "user_id": "d6a20262-df94-49d6-8305-363e3dd3dd22",
+      "enterprise_id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+      "items": [
+        {
+          "product_id": "85d09596-3bf3-4e1c-91cc-803b6edbbb72",
+          "product_name": "Pastel de Carne",
+          "enterprise_id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+          "quantity": 1,
+          "price_credits": 58,
+          "added_at": "2025-11-24T18:28:07.305942Z"
+        }
+      ],
+      "subtotal": 58,
+      "delivery_fee": 5,
+      "total_credits": 63,
+      "status": "pending",
+      "created_at": "2025-11-24T18:28:07.330535Z"
+    },
+    {
+      "order_id": "55df26cd-0820-4e83-a0f6-4b1024148d24",
+      "user_id": "5654bc10-c8b1-4ab9-b4e5-4287db1944d5",
+      "enterprise_id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+      "items": [
+        {
+          "product_id": "9095e3a1-8119-4498-88a2-db2872fb98dc",
+          "product_name": "Sushi Combo",
+          "enterprise_id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+          "quantity": 1,
+          "price_credits": 57,
+          "added_at": "2025-11-24T18:28:07.419639Z"
+        }
+      ],
+      "subtotal": 57,
+      "delivery_fee": 5,
+      "total_credits": 62,
+      "status": "pending",
+      "created_at": "2025-11-24T18:28:07.449049Z"
+    },
+    {
+      "order_id": "d01e544e-64a3-4b79-823d-00521db7579c",
+      "user_id": "43ebd773-23cf-43c5-a073-807a699cbcfc",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-24T18:28:07.530797Z"
+        }
+      ],
+      "subtotal": 32,
+      "delivery_fee": 5,
+      "total_credits": 37,
+      "status": "pending",
+      "created_at": "2025-11-24T18:28:07.559371Z"
+    },
+    {
+      "order_id": "b025ade1-3258-4b09-84e7-84d476285977",
+      "user_id": "7fff3e29-60c6-4c56-8ee4-f5512f09d1de",
+      "enterprise_id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+      "items": [
+        {
+          "product_id": "bc3fc13d-a43d-4d45-b3c4-2359f2d47242",
+          "product_name": "Pastel de Carne",
+          "enterprise_id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+          "quantity": 1,
+          "price_credits": 59,
+          "added_at": "2025-11-24T18:28:07.653018Z"
+        }
+      ],
+      "subtotal": 59,
+      "delivery_fee": 5,
+      "total_credits": 64,
+      "status": "pending",
+      "created_at": "2025-11-24T18:28:07.684160Z"
+    },
+    {
+      "order_id": "e34e97bc-c02f-4a44-8b37-c3981228e532",
+      "user_id": "a81a4190-9b56-4ece-b6e3-ad9de9cc5358",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-24T18:47:20.305217Z"
+        },
+        {
+          "product_id": "8dff815f-fcaf-4a6b-aa9b-2699270643fe",
+          "product_name": "Açaí 500ml",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 56,
+          "added_at": "2025-11-24T18:50:21.553129Z"
+        }
+      ],
+      "subtotal": 88,
+      "delivery_fee": 5,
+      "total_credits": 93,
+      "status": "pending",
+      "created_at": "2025-11-24T18:50:26.123944Z"
+    },
+    {
+      "order_id": "da2119d8-64b8-46f7-aad7-c1a4b6c2e07c",
+      "user_id": "a81a4190-9b56-4ece-b6e3-ad9de9cc5358",
+      "enterprise_id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+      "items": [
+        {
+          "product_id": "85d09596-3bf3-4e1c-91cc-803b6edbbb72",
+          "product_name": "Pastel de Carne",
+          "enterprise_id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+          "quantity": 1,
+          "price_credits": 58,
+          "added_at": "2025-11-24T18:51:34.684179Z"
+        }
+      ],
+      "subtotal": 58,
+      "delivery_fee": 5,
+      "total_credits": 63,
+      "status": "pending",
+      "created_at": "2025-11-24T18:51:41.698991Z"
+    },
+    {
+      "order_id": "fbdad94c-f088-4435-96c3-ea9b6ed2cd64",
+      "user_id": "338d4c1d-1d64-4765-84e6-58d9b1d17d13",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-24T19:10:13.047520Z"
+        },
+        {
+          "product_id": "8dff815f-fcaf-4a6b-aa9b-2699270643fe",
+          "product_name": "Açaí 500ml",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 56,
+          "added_at": "2025-11-24T19:10:13.858496Z"
+        },
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-24T19:10:18.244908Z"
+        }
+      ],
+      "subtotal": 120,
+      "delivery_fee": 5,
+      "total_credits": 125,
+      "status": "delivered",
+      "created_at": "2025-11-24T19:10:21.640251Z",
+      "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "delivered_at": "2025-11-24T19:11:19.375429Z"
+    }
+  ],
+  "transactions": [
+    {
+      "tx_id": "d44961cb-d1df-4c09-82fb-fff2624b27d9",
+      "type": "purchase",
+      "from": "55ba6c8c-0aab-4613-a4a4-1d5c63297429",
+      "to": "system",
+      "amount": 57,
+      "meta": {
+        "subtotal": 52,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:28:07.215532Z"
+    },
+    {
+      "tx_id": "47084c65-8547-4d96-b7f3-e270ae2a9bd8",
+      "type": "purchase",
+      "from": "d6a20262-df94-49d6-8305-363e3dd3dd22",
+      "to": "system",
+      "amount": 63,
+      "meta": {
+        "subtotal": 58,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:28:07.330521Z"
+    },
+    {
+      "tx_id": "573fce03-ba6a-49be-aa3e-a30130e47eb4",
+      "type": "purchase",
+      "from": "5654bc10-c8b1-4ab9-b4e5-4287db1944d5",
+      "to": "system",
+      "amount": 62,
+      "meta": {
+        "subtotal": 57,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:28:07.449028Z"
+    },
+    {
+      "tx_id": "298da015-83e3-4b5e-8fd4-aa4f0e846814",
+      "type": "purchase",
+      "from": "43ebd773-23cf-43c5-a073-807a699cbcfc",
+      "to": "system",
+      "amount": 37,
+      "meta": {
+        "subtotal": 32,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:28:07.559354Z"
+    },
+    {
+      "tx_id": "9d677bae-b8f4-427d-99df-d304805b2c01",
+      "type": "purchase",
+      "from": "7fff3e29-60c6-4c56-8ee4-f5512f09d1de",
+      "to": "system",
+      "amount": 64,
+      "meta": {
+        "subtotal": 59,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:28:07.684146Z"
+    },
+    {
+      "tx_id": "9c69f91b-38ba-4581-b2c9-27210062b88f",
+      "type": "purchase",
+      "from": "a81a4190-9b56-4ece-b6e3-ad9de9cc5358",
+      "to": "system",
+      "amount": 93,
+      "meta": {
+        "subtotal": 88,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:50:26.123931Z"
+    },
+    {
+      "tx_id": "b3c3d795-d793-4907-a3d2-b06f96564787",
+      "type": "purchase",
+      "from": "a81a4190-9b56-4ece-b6e3-ad9de9cc5358",
+      "to": "system",
+      "amount": 63,
+      "meta": {
+        "subtotal": 58,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T18:51:41.698964Z"
+    },
+    {
+      "tx_id": "31bf36a0-f323-4439-959c-5a5434d62898",
+      "type": "credit_delivery",
+      "from": "system",
+      "to": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "amount": 5,
+      "meta": {
+        "order": "92d9a14c-c78e-4d15-8252-6d01adf7bbd7"
+      },
+      "created_at": "2025-11-24T19:04:08.424295Z"
+    },
+    {
+      "tx_id": "f3c9c7d6-d33d-49d4-8cf1-d648f9356244",
+      "type": "purchase",
+      "from": "338d4c1d-1d64-4765-84e6-58d9b1d17d13",
+      "to": "system",
+      "amount": 125,
+      "meta": {
+        "subtotal": 120,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T19:10:21.640235Z"
+    },
+    {
+      "tx_id": "0e01b19e-8257-45df-b7cb-bb6ef2c7f52f",
+      "type": "credit_delivery",
+      "to": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "amount": 5,
+      "meta": {
+        "order": "fbdad94c-f088-4435-96c3-ea9b6ed2cd64"
+      },
+      "created_at": "2025-11-24T19:11:19.375503Z"
+    }
+  ],
+  "enterprises": [
+    {
+      "id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "owner": "65773330-7e31-4f4f-873f-f388180722b4",
+      "name": "Burguer Kingo 82",
+      "cnpj": "75.146.681/0001-98",
+      "products": [
+        {
+          "id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "name": "X-Bacon",
+          "price_credits": 32,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "8dff815f-fcaf-4a6b-aa9b-2699270643fe",
+          "name": "Açaí 500ml",
+          "price_credits": 56,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "ce3b5588-b471-4549-a08e-4f2ae17fb49b",
+          "name": "Pudim",
+          "price_credits": 52,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        }
+      ],
+      "balance": 0,
+      "created_at": "2025-11-24T18:28:06.433029Z"
+    },
+    {
+      "id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+      "owner": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+      "name": "Pizzaria do Mario 71",
+      "cnpj": "86.758.893/0001-85",
+      "products": [
+        {
+          "id": "0254b1b1-5686-4806-9b2f-5e485ff3a828",
+          "name": "X-Bacon",
+          "price_credits": 50,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "bc3fc13d-a43d-4d45-b3c4-2359f2d47242",
+          "name": "Pastel de Carne",
+          "price_credits": 59,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "bfedd7bb-3540-4ff1-8b98-343f9556352f",
+          "name": "Pudim",
+          "price_credits": 33,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "9095e3a1-8119-4498-88a2-db2872fb98dc",
+          "name": "Sushi Combo",
+          "price_credits": 57,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        }
+      ],
+      "balance": 0,
+      "created_at": "2025-11-24T18:28:06.540462Z"
+    },
+    {
+      "id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+      "owner": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+      "name": "Sushizeiro 46",
+      "cnpj": "31.454.953/0001-18",
+      "products": [
+        {
+          "id": "2c2927de-e4c1-40ea-8a7b-ce4d41c5d981",
+          "name": "Sushi Combo",
+          "price_credits": 47,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "d2d26977-71e7-466c-bd51-8867760f0a37",
+          "name": "Pizza Calabresa",
+          "price_credits": 60,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "85d09596-3bf3-4e1c-91cc-803b6edbbb72",
+          "name": "Pastel de Carne",
+          "price_credits": 58,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        },
+        {
+          "id": "bd4c281b-4f40-41c7-9a63-0e7ca1a96106",
+          "name": "X-Bacon",
+          "price_credits": 20,
+          "description": "Delicioso",
+          "ingredients": [
+            "Sabor"
+          ],
+          "reviews": []
+        }
+      ],
+      "balance": 0,
+      "created_at": "2025-11-24T18:28:06.673125Z"
+    },
+    {
+      "id": "a668c822-ec12-4858-ad56-800acbe6a2ff",
+      "owner": "a668c822-ec12-4858-ad56-800acbe6a2ff",
+      "name": "Empresa Teste",
+      "cnpj": "00.000.000/0000-00",
+      "products": [
+        {
+          "id": "8f788802-e46c-4e88-924e-3ce0da45dab0",
+          "name": "Lanche de Lanche ",
+          "price_credits": 1,
+          "description": "Lanche",
+          "ingredients": [
+            "Lanche",
+            "sabor"
+          ],
+          "reviews": []
+        }
+      ],
+      "balance": 0,
+      "created_at": "2025-11-24T18:53:47.074043Z"
+    },
+    {
+      "id": "bd5b6abd-020c-400f-b71a-ddde85eb85aa",
+      "owner": "bd5b6abd-020c-400f-b71a-ddde85eb85aa",
+      "name": "Rio Branco",
+      "cnpj": "00.623.904/0001-73",
+      "products": [],
+      "balance": 0,
+      "created_at": "2025-11-24T19:00:08.164492Z"
+    }
+  ],
+  "delivery": {
+    "54a4307e-e415-49d1-8b32-782ed489f634": {
+      "assigned_orders": [],
+      "status": "available",
+      "balance": 10
+    },
+    "594bb0a3-bdce-4ef5-8deb-4a21a3e4e417": {
+      "assigned_orders": [],
+      "status": "available",
+      "balance": 0
+    }
+  },
+  "userstate": {
+    "338d4c1d-1d64-4765-84e6-58d9b1d17d13": {
+      "cart": [],
+      "favorites": {},
+      "orders": [
+        "fbdad94c-f088-4435-96c3-ea9b6ed2cd64"
+      ]
+    }
+  }
 }

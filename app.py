@@ -9,6 +9,10 @@ from page_routes import register_routes
 app = Flask(__name__)
 app.secret_key = "TastySecretTail"
 
+app.config["SESSION_COOKIE_SECURE"] = False 
+app.config["SESSION_COOKIE_HTTPONLY"] = True 
+app.config["SESSION_COOKIE_SAMESITE"] = 'Lax'
+
 # --- REGISTRO DE BLUEPRINTS ---
 app.register_blueprint(main_bp)
 app.register_blueprint(admin_bp)

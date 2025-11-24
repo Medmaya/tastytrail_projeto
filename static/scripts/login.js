@@ -5,62 +5,87 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!form) return;
 
+  const showError = (msg) => {
+    if (resultEl) {
+      resultEl.style.color = "red";
+      resultEl.innerText = msg;
+    } else {
+      alert(msg);
+    }
+  };
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = (form.email && form.email.value || "").trim();
-    const password = (form.password && form.password.value) || "";
+    
+    // Limpa erros anteriores
+    if(resultEl) resultEl.innerText = "";
+    const inputs = form.querySelectorAll("input");
+    inputs.forEach(i => i.classList.remove("input-error"));
 
+    const emailInput = form.email;
+    const passInput = form.password;
+    const email = (emailInput.value || "").trim();
+    const password = (passInput.value || "");
+
+    // 1. Validação de Campos Vazios
     if (!email || !password) {
-      if (resultEl) { resultEl.style.color = "red"; resultEl.innerText = "Email e senha são obrigatórios."; }
-      else alert("Email e senha são obrigatórios.");
+      showError("Email e senha são obrigatórios.");
+      if(!email) emailInput.classList.add("input-error");
+      if(!password) passInput.classList.add("input-error");
       return;
     }
 
-    // valida email simples
-    const reEmail = /^\S+@\S+\.\S+$/;
+    // 2. Regex de Email 
+    const reEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!reEmail.test(email)) {
-      if (resultEl) { resultEl.style.color = "red"; resultEl.innerText = "Email inválido."; }
-      else alert("Email inválido.");
+      showError("Por favor, insira um email válido.");
+      emailInput.classList.add("input-error");
       return;
     }
 
     const submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.orig = submitBtn.innerText; submitBtn.innerText = "Conectando..."; }
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.dataset.orig = submitBtn.innerText;
+      submitBtn.innerText = "Conectando...";
+    }
 
     try {
       const resp = await fetch("/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
+        credentials: "include", 
         body: JSON.stringify({ email, password })
       });
 
       let data = null;
-      try { data = await resp.json(); } catch (err) { /* ignore */ }
+      try { data = await resp.json(); } catch (err) { }
 
       if (!resp.ok) {
         const msg = (data && (data.error || data.message)) || `Erro HTTP ${resp.status}`;
-        if (resultEl) { resultEl.style.color = "red"; resultEl.innerText = msg; }
-        else alert(msg);
+        showError(msg);
         return;
       }
 
+      // Redirecionamento baseado na Role
       const role = data && data.role;
       if (role === "cliente") window.location.href = "/cliente";
       else if (role === "empresa") window.location.href = "/empresa";
       else if (role === "entregador") window.location.href = "/entregador";
       else if (role === "admin") window.location.href = "/admin";
       else {
-        if (resultEl) { resultEl.style.color = "orange"; resultEl.innerText = "Login realizado, mas tipo de conta desconhecido."; }
+        if (resultEl) { resultEl.style.color = "orange"; resultEl.innerText = "Login OK, conta desconhecida."; }
         else alert("Login realizado, tipo de conta desconhecido.");
       }
 
     } catch (err) {
       console.error("login error", err);
-      if (resultEl) { resultEl.style.color = "red"; resultEl.innerText = "Erro de rede durante login."; }
-      else alert("Erro de rede durante login.");
+      showError("Erro de conexão com o servidor.");
     } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = submitBtn.dataset.orig || "Entrar"; }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = submitBtn.dataset.orig || "Entrar";
+      }
     }
   });
 });

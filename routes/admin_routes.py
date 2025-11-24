@@ -21,7 +21,7 @@ DATA_FILE = "data.json"
 def read_data():
     return read_json(DATA_FILE, {
         "users": [],
-        "enterprises": {},
+        "enterprises": [], # LISTA
         "orders": [],
         "transactions": [],
         "payouts": [],
@@ -51,15 +51,15 @@ def _sanitize_user(u):
     return user
 
 # =========================================================
-#                        DASHBOARD
+#                         DASHBOARD
 # =========================================================
 @admin_bp.route("/dashboard")
 @admin_only
 def dashboard():
     data = read_data()
-    users = data["users"]
-    orders = data["orders"]
-    txs = data["transactions"]
+    users = data.get("users", [])
+    orders = data.get("orders", [])
+    txs = data.get("transactions", [])
     
     return jsonify({
         "total_users": len(users),
@@ -126,15 +126,23 @@ def create_user():
         user["password"] = password
 
     data["users"].append(user)
-
-    # cria userstate
-    data["userstate"][uid] = {
-        "cart": [],
-        "favorites": {"products": [], "enterprises": []},
-        "orders": [],
-        "preferences": {},
-        "created_at": now_iso()
-    }
+    
+    # Inicializações auxiliares
+    if user["role"] == "cliente":
+        data.setdefault("userstate", {})[uid] = {"cart": [], "favorites": {}, "orders": []}
+    elif user["role"] == "entregador":
+        data.setdefault("delivery", {})[uid] = {"assigned_orders": [], "balance": 0, "status": "available"}
+    elif user["role"] == "empresa":
+        # Se admin cria empresa manualmente, cria a entrada na lista enterprises
+        new_ent = {
+            "id": uid,
+            "owner": uid,
+            "name": username, # usa username como nome temporário
+            "products": [],
+            "balance": 0,
+            "created_at": now_iso()
+        }
+        data.setdefault("enterprises", []).append(new_ent)
 
     write_data(data)
 
@@ -146,31 +154,35 @@ def create_user():
 def update_user(user_id):
     payload = request.get_json() or {}
     data = read_data()
-
+    
+    user_found = None
     for u in data["users"]:
         if u["id"] == user_id:
+            user_found = u
+            break
+            
+    if not user_found:
+        return jsonify({"error": "not found"}), 404
 
-            for k in ("username", "email", "role", "banned", "warnings"):
-                if k in payload:
-                    u[k] = payload[k]
+    for k in ("username", "email", "role", "banned", "warnings"):
+        if k in payload:
+            user_found[k] = payload[k]
 
-            if "password" in payload:
-                if hash_password:
-                    u["password_hash"] = hash_password(payload["password"])
-                    u.pop("password", None)
-                else:
-                    u["password"] = payload["password"]
+    if "password" in payload:
+        if hash_password:
+            user_found["password_hash"] = hash_password(payload["password"])
+            user_found.pop("password", None)
+        else:
+            user_found["password"] = payload["password"]
 
-            if "credits" in payload:
-                try:
-                    u["credits"] = int(payload["credits"])
-                except:
-                    pass
+    if "credits" in payload:
+        try:
+            user_found["credits"] = int(payload["credits"])
+        except:
+            pass
 
-            write_data(data)
-            return jsonify({"message": "updated", "user": _sanitize_user(u)})
-
-    return jsonify({"error": "not found"}), 404
+    write_data(data)
+    return jsonify({"message": "updated", "user": _sanitize_user(user_found)})
 
 
 @admin_bp.route("/users/<user_id>", methods=["DELETE"])
@@ -185,26 +197,30 @@ def delete_user(user_id):
 
     data["users"] = new_users
     data["userstate"].pop(user_id, None)
+    data["delivery"].pop(user_id, None)
+    
+    # Se for empresa, remove da lista enterprises também
+    data["enterprises"] = [e for e in data["enterprises"] if e["id"] != user_id]
 
     write_data(data)
 
     return jsonify({"message": "deleted"}), 200
 
 # =========================================================
-#               ENTERPRISE CRUD
+#               ENTERPRISE CRUD (Refatorado para Lista)
 # =========================================================
 @admin_bp.route("/enterprises", methods=["GET"])
 @admin_only
 def list_enterprises():
     data = read_data()
-    return jsonify(data["enterprises"])
+    return jsonify(data.get("enterprises", []))
 
 
 @admin_bp.route("/enterprises/<ent_id>", methods=["GET"])
 @admin_only
 def get_enterprise(ent_id):
     data = read_data()
-    ent = data["enterprises"].get(ent_id)
+    ent = next((e for e in data.get("enterprises", []) if e["id"] == ent_id), None)
     if not ent:
         return jsonify({"error": "not found"}), 404
     return jsonify(ent)
@@ -220,17 +236,18 @@ def create_enterprise():
         return jsonify({"error": "name required"}), 400
 
     data = read_data()
-
     ent_id = str(uuid.uuid4())
+    
     ent = {
         "id": ent_id,
         "name": name,
         "owner": payload.get("owner"),
         "products": [],
+        "balance": 0,
         "created_at": now_iso()
     }
 
-    data["enterprises"][ent_id] = ent
+    data.setdefault("enterprises", []).append(ent)
     write_data(data)
 
     return jsonify({"message": "created", "enterprise": ent}), 201
@@ -240,8 +257,13 @@ def create_enterprise():
 @admin_only
 def update_enterprise(ent_id):
     data = read_data()
-    ent = data["enterprises"].get(ent_id)
-
+    
+    ent = None
+    for e in data.get("enterprises", []):
+        if e["id"] == ent_id:
+            ent = e
+            break
+            
     if not ent:
         return jsonify({"error": "not found"}), 404
 
@@ -251,9 +273,7 @@ def update_enterprise(ent_id):
         if k in payload:
             ent[k] = payload[k]
 
-    data["enterprises"][ent_id] = ent
     write_data(data)
-
     return jsonify({"message": "updated", "enterprise": ent})
 
 
@@ -261,23 +281,25 @@ def update_enterprise(ent_id):
 @admin_only
 def delete_enterprise(ent_id):
     data = read_data()
+    
+    initial_len = len(data.get("enterprises", []))
+    data["enterprises"] = [e for e in data.get("enterprises", []) if e["id"] != ent_id]
 
-    if ent_id not in data["enterprises"]:
+    if len(data["enterprises"]) == initial_len:
         return jsonify({"error": "not found"}), 404
 
-    data["enterprises"].pop(ent_id)
     write_data(data)
-
     return jsonify({"message": "deleted"})
 
 # =========================================================
-#                  PRODUCTS CRUD
+#                  PRODUCTS CRUD (Refatorado)
 # =========================================================
 @admin_bp.route("/enterprises/<ent_id>/products", methods=["POST"])
 @admin_only
 def create_product(ent_id):
     data = read_data()
-    ent = data["enterprises"].get(ent_id)
+    ent = next((e for e in data.get("enterprises", []) if e["id"] == ent_id), None)
+    
     if not ent:
         return jsonify({"error": "enterprise not found"}), 404
 
@@ -291,8 +313,7 @@ def create_product(ent_id):
         "created_at": now_iso()
     }
 
-    ent["products"].append(product)
-    data["enterprises"][ent_id] = ent
+    ent.setdefault("products", []).append(product)
     write_data(data)
 
     return jsonify({"message": "product created", "product": product}), 201
@@ -302,64 +323,68 @@ def create_product(ent_id):
 @admin_only
 def update_product(ent_id, pid):
     data = read_data()
-    ent = data["enterprises"].get(ent_id)
+    ent = next((e for e in data.get("enterprises", []) if e["id"] == ent_id), None)
+
     if not ent:
         return jsonify({"error":"enterprise not found"}), 404
 
     products = ent.get("products", [])
+    product_found = False
 
     for p in products:
         if p["id"] == pid:
+            product_found = True
             payload = request.get_json() or {}
             for k in ("name", "description", "price_credits"):
                 if k in payload:
                     value = payload[k]
                     if k == "price_credits":
-                        try:
-                            value = int(value)
-                        except:
-                            pass
+                        try: value = int(value)
+                        except: pass
                     p[k] = value
+            break
 
-            write_data(data)
-            return jsonify({"message":"product updated", "product": p})
-
-    return jsonify({"error":"product not found"}), 404
+    if not product_found:
+        return jsonify({"error":"product not found"}), 404
+        
+    write_data(data)
+    return jsonify({"message":"product updated"})
 
 
 @admin_bp.route("/enterprises/<ent_id>/products/<pid>", methods=["DELETE"])
 @admin_only
 def delete_product(ent_id, pid):
     data = read_data()
-    ent = data["enterprises"].get(ent_id)
+    ent = next((e for e in data.get("enterprises", []) if e["id"] == ent_id), None)
+
     if not ent:
         return jsonify({"error":"enterprise not found"}), 404
 
-    new_p = [p for p in ent.get("products",[]) if p["id"] != pid]
-
-    if len(new_p) == len(ent.get("products",[])):
+    products = ent.get("products", [])
+    new_products = [p for p in products if p["id"] != pid]
+    
+    if len(new_products) == len(products):
         return jsonify({"error":"product not found"}), 404
-
-    ent["products"] = new_p
-    data["enterprises"][ent_id] = ent
+        
+    ent["products"] = new_products
     write_data(data)
 
     return jsonify({"message":"deleted"})
 
 # =========================================================
-#                     ORDERS CRUD
+#                    ORDERS CRUD
 # =========================================================
 @admin_bp.route("/orders", methods=["GET"])
 @admin_only
 def list_orders():
-    return jsonify(read_data()["orders"])
+    return jsonify(read_data().get("orders", []))
 
 
 @admin_bp.route("/orders/<oid>", methods=["GET"])
 @admin_only
 def get_order(oid):
     data = read_data()
-    for o in data["orders"]:
+    for o in data.get("orders", []):
         if o["order_id"] == oid:
             return jsonify(o)
     return jsonify({"error":"not found"}), 404
@@ -386,10 +411,10 @@ def create_order():
         "created_at": now_iso()
     }
 
-    data["orders"].append(order)
+    data.setdefault("orders", []).append(order)
 
     # salva lista de pedidos do usuário
-    if uid in data["userstate"]:
+    if uid in data.get("userstate", {}):
         data["userstate"][uid].setdefault("orders", []).append(order["order_id"])
 
     write_data(data)
@@ -402,29 +427,34 @@ def create_order():
 def update_order(oid):
     payload = request.get_json() or {}
     data = read_data()
-
-    for o in data["orders"]:
+    
+    order_found = None
+    for o in data.get("orders", []):
         if o["order_id"] == oid:
-            for k in ("status", "assigned_delivery"):
-                if k in payload:
-                    o[k] = payload[k]
+            order_found = o
+            break
+            
+    if not order_found:
+        return jsonify({"error":"not found"}), 404
 
-            if "status" in payload and payload["status"] == "delivered":
-                o["delivered_at"] = now_iso()
+    for k in ("status", "assigned_delivery"):
+        if k in payload:
+            order_found[k] = payload[k]
 
-            write_data(data)
-            return jsonify({"message":"updated","order":o})
+    if "status" in payload and payload["status"] == "delivered":
+        order_found["delivered_at"] = now_iso()
 
-    return jsonify({"error":"not found"}), 404
+    write_data(data)
+    return jsonify({"message":"updated","order": order_found})
 
 
 @admin_bp.route("/orders/<oid>", methods=["DELETE"])
 @admin_only
 def delete_order(oid):
     data = read_data()
-    new_orders = [o for o in data["orders"] if o["order_id"] != oid]
+    new_orders = [o for o in data.get("orders", []) if o["order_id"] != oid]
 
-    if len(new_orders) == len(data["orders"]):
+    if len(new_orders) == len(data.get("orders", [])):
         return jsonify({"error":"not found"}), 404
 
     data["orders"] = new_orders
@@ -432,12 +462,12 @@ def delete_order(oid):
     return jsonify({"message":"deleted"})
 
 # =========================================================
-#                 DELIVERY CONTROL
+#                 DELIVERY & FINANCE
 # =========================================================
 @admin_bp.route("/delivery", methods=["GET"])
 @admin_only
 def list_delivery_states():
-    return jsonify(read_data()["delivery"])
+    return jsonify(read_data().get("delivery", {}))
 
 
 @admin_bp.route("/delivery/reset/<uid>", methods=["POST"])
@@ -445,7 +475,7 @@ def list_delivery_states():
 def reset_delivery(uid):
     data = read_data()
 
-    if uid not in data["delivery"]:
+    if uid not in data.get("delivery", {}):
         return jsonify({"error":"not found"}), 404
 
     data["delivery"][uid] = {
@@ -458,28 +488,21 @@ def reset_delivery(uid):
     write_data(data)
     return jsonify({"message":"delivery reset"})
 
-# =========================================================
-#                   TRANSACTIONS
-# =========================================================
 @admin_bp.route("/transactions", methods=["GET"])
 @admin_only
 def list_transactions():
-    return jsonify(read_data()["transactions"])
+    return jsonify(read_data().get("transactions", []))
 
-# =========================================================
-#                     PAYOUTS
-# =========================================================
 @admin_bp.route("/payouts", methods=["GET"])
 @admin_only
 def list_payouts():
-    return jsonify(read_data()["payouts"])
-
+    return jsonify(read_data().get("payouts", []))
 
 @admin_bp.route("/payouts/<pid>/approve", methods=["POST"])
 @admin_only
 def approve_payout(pid):
     data = read_data()
-    for p in data["payouts"]:
+    for p in data.get("payouts", []):
         if p["payout_id"] == pid:
             p["status"] = "approved"
             p["approved_at"] = now_iso()
@@ -487,12 +510,11 @@ def approve_payout(pid):
             return jsonify({"message":"approved","payout":p})
     return jsonify({"error":"not found"}), 404
 
-
 @admin_bp.route("/payouts/<pid>/reject", methods=["POST"])
 @admin_only
 def reject_payout(pid):
     data = read_data()
-    for p in data["payouts"]:
+    for p in data.get("payouts", []):
         if p["payout_id"] == pid:
             p["status"] = "rejected"
             p["rejected_at"] = now_iso()
@@ -500,9 +522,6 @@ def reject_payout(pid):
             return jsonify({"message":"rejected","payout":p})
     return jsonify({"error":"not found"}), 404
 
-# =========================================================
-#                      EXPORT BACKUP
-# =========================================================
 @admin_bp.route("/export", methods=["GET"])
 @admin_only
 def export_data():
