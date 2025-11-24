@@ -1,62 +1,110 @@
-// admin.js
-// Usa credentials same-origin para enviar cookies de sessão
+// dashboardAdmin.js (versão corrigida e mais resiliente)
 const API_ROOT = '';
 
 document.addEventListener('DOMContentLoaded', () => {
-  initMenu();
-  bindUI();
-  loadOverview();
-  loadUsers();
-  loadOrders();
-  loadEnterprises();
-  loadTransactions();
+  try {
+    initMenu();
+    bindUI();
+    // carregamentos independentes — cada um protegido
+    safeCall(loadOverview);
+    safeCall(loadUsers);
+    safeCall(loadOrders);
+    safeCall(loadEnterprises);
+    safeCall(loadTransactions);
+  } catch (err) {
+    console.error('Erro inicializando dashboard:', err);
+  }
 });
 
+/* ---------- util helpers ---------- */
+function getEl(id) { return document.getElementById(id) || null; }
+function safeCall(fn) { return Promise.resolve().then(()=>fn()).catch(err=>console.error(fn.name+' failed:', err)); }
+
+function handleAuthError(resp) {
+  if (resp.status === 401) { window.location.href = '/login'; return true; }
+  return false;
+}
+async function jsonOrText(resp) {
+  const ct = resp.headers && resp.headers.get ? resp.headers.get('content-type') || '' : '';
+  if (ct.includes('application/json')) return resp.json();
+  return resp.text();
+}
+async function safeFetch(path, opts = {}) {
+  opts.credentials = opts.credentials || 'same-origin';
+  opts.headers = Object.assign({'Accept': 'application/json'}, opts.headers || {});
+  const resp = await fetch(API_ROOT + path, opts);
+  if (handleAuthError(resp)) throw new Error('not authenticated');
+  const payload = await jsonOrText(resp).catch(()=>null);
+  if (!resp.ok) {
+    const msg = (payload && payload.error) || (typeof payload === 'string' && payload) || `HTTP ${resp.status}`;
+    const err = new Error(String(msg));
+    err.raw = payload; err.status = resp.status;
+    throw err;
+  }
+  return payload;
+}
+
+/* ---------- menu + bindings ---------- */
 function initMenu(){
   document.querySelectorAll('.menu-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       const section = btn.dataset.section;
-      document.querySelectorAll('.section').forEach(s=>{
-        s.classList.toggle('active', s.id === section);
-      });
+      document.querySelectorAll('.section').forEach(s=> s.classList.toggle('active', s.id === section));
     });
   });
-
-  document.getElementById('exportBtn').addEventListener('click', exportBackup);
-  document.getElementById('logoutBtn').addEventListener('click', logout);
-  document.getElementById('refreshUsers').addEventListener('click', loadUsers);
-  document.getElementById('refreshOrders').addEventListener('click', loadOrders);
-  document.getElementById('refreshEnterprises').addEventListener('click', loadEnterprises);
-  document.getElementById('refreshTx').addEventListener('click', loadTransactions);
-
-  // search handlers
-  document.getElementById('userSearch').addEventListener('input', e => filterUsers(e.target.value));
-  document.getElementById('orderSearch').addEventListener('input', e => filterOrders(e.target.value));
-  document.getElementById('enterpriseSearch').addEventListener('input', e => filterEnterprises(e.target.value));
-  document.getElementById('txSearch').addEventListener('input', e => filterTx(e.target.value));
 }
 
+function bindUI(){
+  try {
+    getEl('exportBtn')?.addEventListener('click', ()=>safeCall(exportBackup));
+    getEl('logoutBtn')?.addEventListener('click', ()=>safeCall(logout));
+
+    // refresh buttons
+    getEl('refreshUsers')?.addEventListener('click', ()=>safeCall(loadUsers));
+    getEl('refreshOrders')?.addEventListener('click', ()=>safeCall(loadOrders));
+    getEl('refreshEnterprises')?.addEventListener('click', ()=>safeCall(loadEnterprises));
+    getEl('refreshTx')?.addEventListener('click', ()=>safeCall(loadTransactions));
+
+    // search inputs
+    getEl('userSearch')?.addEventListener('input', e => filterUsers(e.target.value));
+    getEl('orderSearch')?.addEventListener('input', e => filterOrders(e.target.value));
+    getEl('enterpriseSearch')?.addEventListener('input', e => filterEnterprises(e.target.value));
+    getEl('txSearch')?.addEventListener('input', e => filterTx(e.target.value));
+    getEl('filterRole')?.addEventListener('change', ()=>filterUsers(getEl('userSearch')?.value));
+
+    // create buttons (conditionally bind)
+    getEl('createUserBtn')?.addEventListener('click', ()=>safeCall(openCreateUserModal));
+    getEl('createOrderBtn')?.addEventListener('click', ()=>safeCall(openCreateOrderModal));
+    getEl('createEnterpriseBtn')?.addEventListener('click', ()=>safeCall(openCreateEnterpriseModal));
+    getEl('createTxBtn')?.addEventListener('click', ()=>safeCall(openCreateTxModal));
+    getEl('createDeliveryBtn')?.addEventListener('click', ()=>safeCall(openCreateDeliveryModal));
+  } catch (err) {
+    console.error('bindUI error', err);
+  }
+}
+
+/* ---------- overview ---------- */
 async function loadOverview(){
   try {
-    const resp = await fetch('/admin/dashboard', {credentials:'same-origin'});
-    if (!resp.ok) return;
-    const data = await resp.json();
-    document.getElementById('cardUsers').innerText = data.total_users ?? '—';
-    document.getElementById('cardOrders').innerText = data.total_orders ?? '—';
-    document.getElementById('cardFlow').innerText = data.total_credit_flow ?? '—';
-    document.getElementById('statUsers').innerText = data.total_users ?? '—';
-    document.getElementById('statOrders').innerText = data.total_orders ?? '—';
-    document.getElementById('statFlow').innerText = data.total_credit_flow ?? '—';
-    // load last orders into overviewOrders (call orders endpoint)
-    const ordersResp = await fetch('/admin/orders', {credentials:'same-origin'});
-    if (ordersResp.ok) {
-      const list = await ordersResp.json();
-      renderOrdersTable(list.slice(-8).reverse(), 'overviewOrders', true);
+    const data = await safeFetch('/admin/dashboard');
+    getEl('cardUsers') && (getEl('cardUsers').innerText = data.total_users ?? '—');
+    getEl('cardOrders') && (getEl('cardOrders').innerText = data.total_orders ?? '—');
+    getEl('cardFlow') && (getEl('cardFlow').innerText = data.total_credit_flow ?? '—');
+    getEl('statUsers') && (getEl('statUsers').innerText = data.total_users ?? '—');
+    getEl('statOrders') && (getEl('statOrders').innerText = data.total_orders ?? '—');
+    getEl('statFlow') && (getEl('statFlow').innerText = data.total_credit_flow ?? '—');
+
+    // last orders (gracefully ignore errors)
+    try {
+      const orders = await safeFetch('/admin/orders');
+      renderOrdersTable((orders||[]).slice(-8).reverse(), 'overviewOrders', true);
+    } catch (err) {
+      console.warn('Could not load overview orders:', err);
     }
   } catch (err) {
-    console.error('overview error', err);
+    console.error('loadOverview error', err);
   }
 }
 
@@ -64,47 +112,54 @@ async function loadOverview(){
 let USERS_CACHE = [];
 async function loadUsers(){
   try {
-    const resp = await fetch('/admin/users', {credentials:'same-origin'});
-    if (!resp.ok) throw new Error('failed');
-    USERS_CACHE = await resp.json();
+    USERS_CACHE = await safeFetch('/admin/users') || [];
     renderUsersTable(USERS_CACHE);
   } catch (err) {
     console.error('loadUsers', err);
-    document.getElementById('usersTable').innerHTML = '<div class="muted">Erro ao carregar usuários</div>';
+    getEl('usersTable') && (getEl('usersTable').innerHTML = `<div class="muted">Erro ao carregar usuários — ${escapeHtml(err.message)}</div>`);
   }
 }
 
 function renderUsersTable(list){
-  const root = document.getElementById('usersTable');
-  if (!list || list.length === 0) {
-    root.innerHTML = '<div class="muted">Nenhum usuário</div>';
-    return;
-  }
+  const root = getEl('usersTable');
+  if (!root) return;
+  if (!list || list.length === 0) { root.innerHTML = '<div class="muted">Nenhum usuário</div>'; return; }
   root.innerHTML = '';
   list.forEach(u => {
-    const row = document.getElementById('userRowTpl').content.cloneNode(true);
-    row.querySelector('.idcol').innerText = u.id || '—';
-    row.querySelector('.usercol').innerHTML = `<strong>${escapeHtml(u.username||u.email||'—')}</strong><div style="font-size:.8rem;color:rgba(255,255,255,0.6)">${escapeHtml(u.email||'')}</div>`;
-    row.querySelector('.rolecol').innerText = u.role||'—';
-    row.querySelector('.creditcol').innerText = (u.credits||0) + ' pts';
-    const actionCell = row.querySelector('.actioncol');
-    // details button
-    const detailsBtn = document.createElement('button'); detailsBtn.innerText = 'Ver'; detailsBtn.addEventListener('click', ()=>showUser(u.id));
-    // ban button
-    const banBtn = document.createElement('button'); banBtn.innerText = 'Banir'; banBtn.classList.add('ban'); banBtn.addEventListener('click', ()=>banUser(u.id));
-    // warn
-    const warnBtn = document.createElement('button'); warnBtn.innerText = 'Avisar'; warnBtn.addEventListener('click', ()=>warnUser(u.id));
-    // topup
-    const topupBtn = document.createElement('button'); topupBtn.innerText = 'Topup'; topupBtn.classList.add('topup'); topupBtn.addEventListener('click', ()=>promptTopup(u.id));
-    actionCell.append(detailsBtn, banBtn, warnBtn, topupBtn);
-    root.appendChild(row);
+    try {
+      const tpl = getEl('userRowTpl');
+      if (!tpl) {
+        // fallback row
+        const row = document.createElement('div'); row.className='row';
+        row.innerText = `${u.id} — ${u.username || u.email}`;
+        root.appendChild(row);
+        return;
+      }
+      const row = tpl.content.cloneNode(true);
+      row.querySelector('.idcol').innerText = u.id || '—';
+      row.querySelector('.usercol').innerHTML = `<strong>${escapeHtml(u.username||u.email||'—')}</strong><div class="muted small">${escapeHtml(u.email||'')}</div>`;
+      row.querySelector('.rolecol').innerText = u.role||'—';
+      row.querySelector('.creditcol').innerText = (u.credits||0) + ' pts';
+      const actionCell = row.querySelector('.actioncol');
+      // clear then append
+      actionCell.innerHTML = '';
+      actionCell.appendChild(createBtn('Ver', ()=>safeCall(()=>showUser(u.id))));
+      actionCell.appendChild(createBtn('Editar', ()=>safeCall(()=>openEditUserModal(u))));
+      actionCell.appendChild(createBtn('Excluir', ()=>safeCall(()=>deleteUser(u.id)), 'danger'));
+      actionCell.appendChild(createBtn('Banir', ()=>safeCall(()=>banUser(u.id)), 'danger'));
+      actionCell.appendChild(createBtn('Avisar', ()=>safeCall(()=>warnUser(u.id))));
+      actionCell.appendChild(createBtn('Topup', ()=>safeCall(()=>promptTopup(u.id)), 'accent'));
+      root.appendChild(row);
+    } catch (err) {
+      console.error('renderUsersTable row error', err);
+    }
   });
 }
 
 function filterUsers(q){
   q = (q||'').toLowerCase().trim();
-  const role = document.getElementById('filterRole').value;
-  let filtered = USERS_CACHE.filter(u => {
+  const role = getEl('filterRole') ? getEl('filterRole').value : '';
+  const filtered = USERS_CACHE.filter(u => {
     const matchQ = !q || (u.username||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q) || (u.id||'').toLowerCase().includes(q);
     const matchRole = !role || (u.role === role);
     return matchQ && matchRole;
@@ -112,47 +167,130 @@ function filterUsers(q){
   renderUsersTable(filtered);
 }
 
+/* create/edit/delete users */
+function openCreateUserModal(){
+  openModal(`<h3>Novo usuário</h3>
+    <form id="frmCreateUser" class="modal-form">
+      <label>Username <input name="username" required /></label>
+      <label>Email <input name="email" type="email" required /></label>
+      <label>Senha <input name="password" type="password" required /></label>
+      <label>Role <select name="role"><option value="cliente">cliente</option><option value="empresa">empresa</option><option value="entregador">entregador</option><option value="admin">admin</option></select></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar</button></div>
+    </form>`);
+  const form = getEl('frmCreateUser');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      await safeFetch('/admin/users', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Usuário criado'); closeModal(); safeCall(loadUsers); safeCall(loadOverview);
+    } catch (err) { alert('Erro criar usuário: '+(err.message||err)); console.error(err); }
+  });
+}
+
+function openEditUserModal(user){
+  openModal(`<h3>Editar usuário</h3>
+    <form id="frmEditUser" class="modal-form">
+      <label>Username <input name="username" value="${escapeHtml(user.username||'')}" /></label>
+      <label>Email <input name="email" type="email" value="${escapeHtml(user.email||'')}" /></label>
+      <label>Role <select name="role">
+        <option ${user.role==='cliente'?'selected':''} value="cliente">cliente</option>
+        <option ${user.role==='empresa'?'selected':''} value="empresa">empresa</option>
+        <option ${user.role==='entregador'?'selected':''} value="entregador">entregador</option>
+        <option ${user.role==='admin'?'selected':''} value="admin">admin</option>
+      </select></label>
+      <label>Credits <input name="credits" type="number" value="${escapeHtml(String(user.credits||0))}" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Salvar</button></div>
+    </form>`);
+  const form = getEl('frmEditUser');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      await safeFetch(`/admin/users/${encodeURIComponent(user.id)}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Usuário atualizado'); closeModal(); safeCall(loadUsers); safeCall(loadOverview);
+    } catch (err) { alert('Erro atualizar usuário: '+(err.message||err)); console.error(err); }
+  });
+}
+
+async function deleteUser(userId){
+  if (!confirm('Excluir usuário permanentemente?')) return;
+  try {
+    await safeFetch(`/admin/users/${encodeURIComponent(userId)}`, { method:'DELETE' });
+    alert('Usuário excluído'); safeCall(loadUsers); safeCall(loadOverview);
+  } catch (err) { alert('Erro excluir: ' + (err.message||err)); console.error(err); }
+}
+
+/* ban / warn / topup */
+async function banUser(userId){
+  const accept = confirm('Banir usuário permanentemente? (OK = permanente, Cancel = temporário)');
+  const payload = accept ? {permanent:true, reason:'Banimento administrativo'} : {permanent:false, until:null, reason:'Temporário'};
+  try { await safeFetch(`/admin/ban/${encodeURIComponent(userId)}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); alert('Usuário banido'); safeCall(loadUsers); }
+  catch (err) { alert('Erro banir: '+(err.message||err)); console.error(err); }
+}
+async function warnUser(userId){
+  const note = prompt('Motivo do aviso (opcional):','Comportamento suspeito');
+  if (note === null) return;
+  try { await safeFetch(`/admin/warn/${encodeURIComponent(userId)}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({note}) }); alert('Aviso registrado'); safeCall(loadUsers); }
+  catch (err){ alert('Erro: '+(err.message||err)); console.error(err); }
+}
+function promptTopup(userId){
+  const v = prompt('Valor (créditos) para adicionar:', '100');
+  if (v === null) return;
+  const amount = parseInt(v);
+  if (isNaN(amount)) { alert('Valor inválido'); return; }
+  topupUser(userId, amount);
+}
+async function topupUser(userId, amount){
+  try {
+    await safeFetch('/admin/topup', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, amount})});
+    alert('Topup realizado'); safeCall(loadUsers); safeCall(loadOverview);
+  } catch (err) { alert('Erro topup: '+(err.message||err)); console.error(err); }
+}
+
 /* ------------------- ORDERS ------------------- */
 let ORDERS_CACHE = [];
 async function loadOrders(){
   try {
-    const resp = await fetch('/admin/orders', {credentials:'same-origin'});
-    if (!resp.ok) throw new Error('failed orders');
-    ORDERS_CACHE = await resp.json();
+    ORDERS_CACHE = await safeFetch('/admin/orders') || [];
     renderOrdersTable(ORDERS_CACHE, 'ordersTable', false);
   } catch (err) {
     console.error('loadOrders', err);
-    document.getElementById('ordersTable').innerHTML = '<div class="muted">Erro ao carregar pedidos</div>';
+    getEl('ordersTable') && (getEl('ordersTable').innerHTML = `<div class="muted">Erro ao carregar pedidos — ${escapeHtml(err.message)}</div>`);
   }
 }
 
 function renderOrdersTable(list, containerId, compact=false){
-  const root = document.getElementById(containerId);
-  if (!list || list.length === 0) {
-    root.innerHTML = '<div class="muted">Nenhum pedido</div>';
-    return;
-  }
+  const root = getEl(containerId);
+  if (!root) return;
+  if (!list || list.length === 0) { root.innerHTML = '<div class="muted">Nenhum pedido</div>'; return; }
   root.innerHTML = '';
   list.forEach(o => {
-    const row = document.getElementById('orderRowTpl').content.cloneNode(true);
-    row.querySelector('.idcol').innerText = o.order_id || o.orderId || '—';
-    row.querySelector('.usercol').innerText = o.user_id || o.user || '—';
-    row.querySelector('.totalcol').innerText = (o.total_credits||o.total||0) + ' pts';
-    row.querySelector('.statuscol').innerText = o.status || '—';
-    const actions = row.querySelector('.actioncol');
-    // view
-    const v = document.createElement('button'); v.innerText = 'Ver'; v.addEventListener('click', ()=>showOrder(o.order_id));
-    // update status select (compact disabled)
-    const sBtn = document.createElement('button'); sBtn.innerText = 'Atualizar status'; sBtn.addEventListener('click', ()=>promptUpdateOrder(o.order_id));
-    actions.appendChild(v); actions.appendChild(sBtn);
-    root.appendChild(row);
+    try {
+      const tpl = getEl('orderRowTpl');
+      if (!tpl) {
+        const r = document.createElement('div'); r.className='row'; r.innerText = `${o.order_id} — ${o.user_id}`;
+        root.appendChild(r); return;
+      }
+      const row = tpl.content.cloneNode(true);
+      row.querySelector('.idcol').innerText = o.order_id || '—';
+      row.querySelector('.usercol').innerText = o.user_id || '—';
+      row.querySelector('.totalcol').innerText = (o.total_credits||0) + ' pts';
+      row.querySelector('.statuscol').innerText = o.status || '—';
+      const actions = row.querySelector('.actioncol');
+      actions.innerHTML = '';
+      actions.appendChild(createBtn('Ver', ()=>safeCall(()=>showOrder(o.order_id))));
+      if (!compact) actions.appendChild(createBtn('Editar', ()=>safeCall(()=>openEditOrderModal(o))));
+      actions.appendChild(createBtn('Excluir', ()=>safeCall(()=>deleteOrder(o.order_id)), 'danger'));
+      root.appendChild(row);
+    } catch (err) { console.error('renderOrdersTable row error', err); }
   });
 }
 
 function filterOrders(q){
   q = (q||'').toLowerCase().trim();
-  const st = document.getElementById('orderFilterStatus').value;
-  let filtered = ORDERS_CACHE.filter(o => {
+  const st = getEl('orderFilterStatus') ? getEl('orderFilterStatus').value : '';
+  const filtered = ORDERS_CACHE.filter(o => {
     const matchQ = !q || (o.order_id||'').toLowerCase().includes(q) || (o.user_id||'').toLowerCase().includes(q);
     const matchS = !st || (o.status === st);
     return matchQ && matchS;
@@ -160,194 +298,332 @@ function filterOrders(q){
   renderOrdersTable(filtered, 'ordersTable', false);
 }
 
+/* create/edit/delete orders */
+function openCreateOrderModal(){
+  openModal(`<h3>Criar Pedido</h3>
+    <form id="frmCreateOrder" class="modal-form">
+      <label>User ID <input name="user_id" required /></label>
+      <label>Items (JSON array) <textarea name="items" placeholder='[{"product_id":"id","quantity":1}]' rows="5" required></textarea></label>
+      <label>Status <input name="status" value="pending" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar pedido</button></div>
+    </form>`);
+  const form = getEl('frmCreateOrder');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const fd = new FormData(form);
+      const body = Object.fromEntries(fd.entries());
+      body.items = JSON.parse(body.items || '[]');
+      await safeFetch('/admin/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Pedido criado'); closeModal(); safeCall(loadOrders); safeCall(loadOverview);
+    } catch (err) { alert('Erro criar pedido: '+(err.message||err)); console.error(err); }
+  });
+}
+
+function openEditOrderModal(order){
+  openModal(`<h3>Editar Pedido</h3>
+    <form id="frmEditOrder" class="modal-form">
+      <label>Order ID <input name="order_id" value="${escapeHtml(order.order_id||'')}" readonly /></label>
+      <label>Status <input name="status" value="${escapeHtml(order.status||'')}" /></label>
+      <label>Total <input name="total_credits" value="${escapeHtml(String(order.total_credits||0))}" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Salvar</button></div>
+    </form>`);
+  const form = getEl('frmEditOrder');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      const id = body.order_id; delete body.order_id;
+      await safeFetch(`/admin/orders/${encodeURIComponent(id)}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Pedido atualizado'); closeModal(); safeCall(loadOrders); safeCall(loadOverview);
+    } catch (err) { alert('Erro atualizar pedido: '+(err.message||err)); console.error(err); }
+  });
+}
+
+async function deleteOrder(orderId){
+  if (!confirm('Deletar pedido?')) return;
+  try { await safeFetch(`/admin/orders/${encodeURIComponent(orderId)}`, { method:'DELETE' }); alert('Pedido deletado'); safeCall(loadOrders); safeCall(loadOverview); }
+  catch (err){ alert('Erro deletar: '+(err.message||err)); console.error(err); }
+}
+
 /* ------------------- ENTERPRISES ------------------- */
 let ENTERPRISE_CACHE = [];
 async function loadEnterprises(){
   try {
-    const resp = await fetch('/admin/enterprises', {credentials:'same-origin'});
-    if (!resp.ok) throw new Error('no ent');
-    ENTERPRISE_CACHE = await resp.json();
+    ENTERPRISE_CACHE = await safeFetch('/enterprises') || [];
     renderEnterprises(ENTERPRISE_CACHE);
   } catch (err) {
-    console.error('enterprises', err);
-    document.getElementById('enterprisesTable').innerHTML = '<div class="muted">Erro ao carregar empresas</div>';
+    console.error('loadEnterprises', err);
+    getEl('enterprisesTable') && (getEl('enterprisesTable').innerHTML = `<div class="muted">Erro ao carregar empresas — ${escapeHtml(err.message)}</div>`);
   }
 }
 
 function renderEnterprises(list){
-  const root = document.getElementById('enterprisesTable');
+  const root = getEl('enterprisesTable');
+  if (!root) return;
   if (!list || list.length === 0) { root.innerHTML = '<div class="muted">Nenhuma empresa</div>'; return; }
   root.innerHTML = '';
-  list.forEach(e => {
-    const row = document.createElement('div'); row.className='row';
-    row.innerHTML = `<div class="cell idcol">${escapeHtml(e.id)}</div>
-                     <div class="cell usercol"><strong>${escapeHtml(e.name)}</strong><div style="font-size:.8rem;color:rgba(255,255,255,0.6)">Owner: ${escapeHtml(e.owner_id||'—')}</div></div>
-                     <div class="cell totalcol">${(e.balance||0)}</div>
-                     <div class="cell statuscol">${e.created_at||''}</div>
-                     <div class="cell actioncol"></div>`;
-    root.appendChild(row);
+  list.forEach(e=>{
+    try {
+      const row = document.createElement('div'); row.className='row';
+      row.innerHTML = `<div class="cell idcol">${escapeHtml(e.id)}</div>
+                       <div class="cell usercol"><strong>${escapeHtml(e.name)}</strong><div class="muted small">Owner: ${escapeHtml(e.owner_id||'—')}</div></div>
+                       <div class="cell totalcol">${(e.balance||0)}</div>
+                       <div class="cell statuscol">${e.created_at||''}</div>
+                       <div class="cell actioncol"></div>`;
+      const action = row.querySelector('.actioncol');
+      action.appendChild(createBtn('Ver', ()=>safeCall(()=>showEnterprise(e.id))));
+      action.appendChild(createBtn('Editar', ()=>safeCall(()=>openEditEnterpriseModal(e))));
+      action.appendChild(createBtn('Produtos', ()=>safeCall(()=>openProductsModal(e))));
+      action.appendChild(createBtn('Excluir', ()=>safeCall(()=>deleteEnterprise(e.id)), 'danger'));
+      root.appendChild(row);
+    } catch (err) { console.error('renderEnterprises row err', err); }
   });
 }
 
-function filterEnterprises(q){
-  q = (q||'').toLowerCase().trim();
-  const filtered = ENTERPRISE_CACHE.filter(e => !q || (e.name||'').toLowerCase().includes(q) || (String(e.id||'')).toLowerCase().includes(q));
-  renderEnterprises(filtered);
+function filterEnterprises(q){ q=(q||'').toLowerCase().trim(); const filtered = ENTERPRISE_CACHE.filter(e => !q || (e.name||'').toLowerCase().includes(q) || (String(e.id||'')).toLowerCase().includes(q)); renderEnterprises(filtered); }
+
+function openCreateEnterpriseModal(){
+  openModal(`<h3>Criar Empresa</h3>
+    <form id="frmCreateEnt" class="modal-form">
+      <label>Owner ID <input name="owner_id" required /></label>
+      <label>Nome <input name="name" required /></label>
+      <label>Balance <input name="balance" type="number" value="0" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar</button></div>
+    </form>`);
+  const form = getEl('frmCreateEnt');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      await safeFetch('/admin/enterprises', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Empresa criada'); closeModal(); safeCall(loadEnterprises);
+    } catch (err) { alert('Erro criar empresa: '+(err.message||err)); console.error(err); }
+  });
+}
+
+function openEditEnterpriseModal(ent){
+  openModal(`<h3>Editar Empresa</h3>
+    <form id="frmEditEnt" class="modal-form">
+      <label>Nome <input name="name" value="${escapeHtml(ent.name||'')}" /></label>
+      <label>Balance <input name="balance" type="number" value="${escapeHtml(String(ent.balance||0))}" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Salvar</button></div>
+    </form>`);
+  const form = getEl('frmEditEnt');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      await safeFetch(`/admin/enterprises/${encodeURIComponent(ent.id)}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Empresa atualizada'); closeModal(); safeCall(loadEnterprises);
+    } catch (err) { alert('Erro: '+(err.message||err)); console.error(err); }
+  });
+}
+
+async function deleteEnterprise(id){
+  if (!confirm('Excluir empresa?')) return;
+  try { await safeFetch(`/admin/enterprises/${encodeURIComponent(id)}`, { method:'DELETE' }); alert('Empresa excluída'); safeCall(loadEnterprises); }
+  catch (err){ alert('Erro excluir: '+(err.message||err)); console.error(err); }
+}
+
+async function showEnterprise(id){
+  try {
+    const ent = await safeFetch(`/admin/enterprises/${encodeURIComponent(id)}`);
+    openModal(`<h3>${escapeHtml(ent.name||'—')}</h3><pre class="json-block">${escapeHtml(JSON.stringify(ent,null,2))}</pre>`);
+  } catch (err) { alert('Erro ao carregar empresa: '+(err.message||err)); console.error(err); }
+}
+
+/* products modal, create/edit/delete inside enterprise (same as earlier) */
+function openProductsModal(ent){
+  safeFetch(`/admin/enterprises/${encodeURIComponent(ent)}`).then(data=>{
+    const prods = (data.products||[]);
+    const rows = prods.map(p=>`<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.4rem">
+        <div style="flex:1"><strong>${escapeHtml(p.name)}</strong><div class="muted small">${escapeHtml(p.id)}</div></div>
+        <div style="width:6rem">${escapeHtml(String(p.price_credits||0))} pts</div>
+        <div><button class="small-btn" data-pid="${escapeHtml(p.id)}" data-ent="${escapeHtml(ent)}">Editar</button></div>
+        <div><button class="small-btn danger" data-delpid="${escapeHtml(p.id)}" data-ent="${escapeHtml(ent)}">Excluir</button></div>
+      </div>`).join('');
+    openModal(`<h3>Produtos — ${escapeHtml(data.name||ent)}</h3>
+      <div style="margin-bottom:.6rem"><button id="btnNewProd" class="small-btn">Novo produto</button></div>
+      <div id="productsList">${rows}</div>`);
+    getEl('btnNewProd')?.addEventListener('click', ()=>openCreateProductModal(ent));
+    document.querySelectorAll('[data-pid]').forEach(b=>b.addEventListener('click', ev=>openEditProductModal(ev.target.dataset.ent, ev.target.dataset.pid)));
+    document.querySelectorAll('[data-delpid]').forEach(b=>b.addEventListener('click', async ev=>{
+      const pid = ev.target.dataset.delpid;
+      if (!confirm('Excluir produto?')) return;
+      try { await safeFetch(`/admin/products/${encodeURIComponent(pid)}`, { method:'DELETE' }); alert('Produto excluído'); closeModal(); safeCall(loadEnterprises); }
+      catch (err) { alert('Erro excluir produto: '+(err.message||err)); console.error(err); }
+    }));
+  }).catch(err => { alert('Erro carregar produtos: '+(err.message||err)); console.error(err); });
+}
+
+function openCreateProductModal(entId){
+  openModal(`<h3>Novo Produto</h3>
+    <form id="frmNewProd" class="modal-form">
+      <label>Nome <input name="name" required /></label>
+      <label>Preço (credits) <input name="price_credits" type="number" required /></label>
+      <label>Descrição <input name="description" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar</button></div>
+    </form>`);
+  const form = getEl('frmNewProd');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      await safeFetch(`/admin/enterprises/${encodeURIComponent(entId)}/products`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Produto criado'); closeModal(); safeCall(loadEnterprises);
+    } catch (err) { alert('Erro criar produto: '+(err.message||err)); console.error(err); }
+  });
+}
+
+function openEditProductModal(entId, prodId){
+  safeFetch(`/admin/products/${encodeURIComponent(prodId)}`).then(p=>{
+    openModal(`<h3>Editar Produto</h3>
+      <form id="frmEditProd" class="modal-form">
+        <label>Nome <input name="name" value="${escapeHtml(p.name||'')}" /></label>
+        <label>Preço <input name="price_credits" type="number" value="${escapeHtml(String(p.price_credits||0))}" /></label>
+        <label>Descrição <input name="description" value="${escapeHtml(p.description||'')}" /></label>
+        <div style="margin-top:.6rem"><button type="submit" class="small-btn">Salvar</button></div>
+      </form>`);
+    const form = getEl('frmEditProd');
+    form && form.addEventListener('submit', async ev=>{
+      ev.preventDefault();
+      try { const body = Object.fromEntries(new FormData(form).entries()); await safeFetch(`/admin/products/${encodeURIComponent(prodId)}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) }); alert('Produto atualizado'); closeModal(); safeCall(loadEnterprises); }
+      catch (err) { alert('Erro atualizar produto: '+(err.message||err)); console.error(err); }
+    });
+  }).catch(err => { alert('Erro obter produto: '+(err.message||err)); console.error(err); });
 }
 
 /* ------------------- TRANSACTIONS ------------------- */
 let TX_CACHE = [];
 async function loadTransactions(){
   try {
-    const resp = await fetch('/admin/transactions', {credentials:'same-origin'});
-    if (!resp.ok) throw new Error('no tx');
-    TX_CACHE = await resp.json();
+    TX_CACHE = await safeFetch('/admin/transactions') || [];
     renderTx(TX_CACHE);
   } catch (err) {
-    console.error('tx', err);
-    document.getElementById('txTable').innerHTML = '<div class="muted">Erro ao carregar transações</div>';
+    console.error('loadTransactions', err);
+    getEl('txTable') && (getEl('txTable').innerHTML = `<div class="muted">Erro — ${escapeHtml(err.message)}</div>`);
   }
 }
-
 function renderTx(list){
-  const root = document.getElementById('txTable');
+  const root = getEl('txTable'); if (!root) return;
   if (!list || list.length === 0) { root.innerHTML = '<div class="muted">Nenhuma transação</div>'; return; }
   root.innerHTML = '';
-  list.forEach(t => {
-    const row = document.createElement('div'); row.className='row';
-    row.innerHTML = `<div class="cell idcol">${escapeHtml(t.tx_id||'—')}</div>
-                     <div class="cell usercol">${escapeHtml(t.type||'')}</div>
-                     <div class="cell totalcol">${escapeHtml(String(t.amount||0))}</div>
-                     <div class="cell statuscol">${escapeHtml(t.created_at||'')}</div>
-                     <div class="cell actioncol"></div>`;
-    root.appendChild(row);
+  list.forEach(t=>{ try { const row=document.createElement('div'); row.className='row'; row.innerHTML = `<div class="cell idcol">${escapeHtml(t.tx_id||'—')}</div><div class="cell usercol">${escapeHtml(t.type||'')}</div><div class="cell totalcol">${escapeHtml(String(t.amount||0))}</div><div class="cell statuscol">${escapeHtml(t.created_at||'')}</div><div class="cell actioncol"></div>`; root.appendChild(row); } catch (err) { console.error('renderTx row err', err); } });
+}
+function filterTx(q){ q=(q||'').toLowerCase().trim(); const f = TX_CACHE.filter(t => !q || (t.tx_id||'').toLowerCase().includes(q) || (t.type||'').toLowerCase().includes(q)); renderTx(f); }
+
+function openCreateTxModal(){
+  openModal(`<h3>Criar transação</h3>
+    <form id="frmCreateTx" class="modal-form">
+      <label>Type <input name="type" value="manual" /></label>
+      <label>From <input name="from" /></label>
+      <label>To <input name="to" /></label>
+      <label>Amount <input name="amount" type="number" value="0" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar</button></div>
+    </form>`);
+  const form = getEl('frmCreateTx');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      body.amount = parseInt(body.amount) || 0;
+      await safeFetch('/admin/transactions', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Transação criada'); closeModal(); safeCall(loadTransactions);
+    } catch (err) { alert('Erro criar tx: '+(err.message||err)); console.error(err); }
   });
 }
 
-function filterTx(q){
-  q = (q||'').toLowerCase().trim();
-  const f = TX_CACHE.filter(t => !q || (t.tx_id||'').toLowerCase().includes(q) || (t.type||'').toLowerCase().includes(q));
-  renderTx(f);
+/* ------------------- DELIVERY ------------------- */
+function openCreateDeliveryModal(){
+  openModal(`<h3>Criar entregador</h3>
+    <form id="frmCreateDel" class="modal-form">
+      <label>Profile JSON <textarea name="profile" rows="4" placeholder='{"name":"Fulano","phone":"11..."}'>{}</textarea></label>
+      <label>Balance <input name="balance" type="number" value="0" /></label>
+      <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar</button></div>
+    </form>`);
+  const form = getEl('frmCreateDel');
+  form && form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    try {
+      const body = Object.fromEntries(new FormData(form).entries());
+      body.profile = JSON.parse(body.profile || '{}');
+      body.balance = parseInt(body.balance) || 0;
+      await safeFetch('/admin/delivery', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      alert('Entregador criado'); closeModal();
+    } catch (err) { alert('Erro criar entregador: '+(err.message||err)); console.error(err); }
+  });
 }
 
-/* ------------------- ACTIONS: ban / warn / topup / show details ------------------- */
-async function banUser(userId){
-  const accept = confirm('Banir usuário permanentemente? (OK = permanente, Cancel = temporário)');
-  const payload = accept ? {permanent:true, reason:'Banimento administrativo'} : {permanent:false, until: null, reason:'Aviso/Temporário'};
-  try {
-    const resp = await fetch(`/admin/ban/${userId}`, {
-      method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+/* ------------------- userstate quick edit ------------------- */
+function openEditUserstateModal(userId){
+  safeFetch(`/admin/userstate/${encodeURIComponent(userId)}`).then(st=>{
+    openModal(`<h3>UserState — ${escapeHtml(userId)}</h3>
+      <form id="frmStateEdit" class="modal-form">
+        <label>State JSON <textarea name="state" rows="8">${escapeHtml(JSON.stringify(st||{},null,2))}</textarea></label>
+        <div style="margin-top:.6rem"><button type="submit" class="small-btn">Salvar</button></div>
+      </form>`);
+    const form = getEl('frmStateEdit');
+    form && form.addEventListener('submit', async e=>{
+      e.preventDefault();
+      try {
+        const body = Object.fromEntries(new FormData(form).entries());
+        const payload = JSON.parse(body.state || '{}');
+        await safeFetch(`/admin/userstate/${encodeURIComponent(userId)}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        alert('UserState atualizado'); closeModal();
+      } catch (err) { alert('Erro atualizar userstate: '+(err.message||err)); console.error(err); }
     });
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({error:'erro'}));
-      alert(err.error || 'Erro ao banir');
-      return;
-    }
-    alert('Usuário banido');
-    loadUsers();
-  } catch (err) { console.error(err); alert('Erro ao banir'); }
-}
-
-async function warnUser(userId){
-  const note = prompt('Motivo do aviso (opcional):','Comportamento suspeito');
-  try {
-    const resp = await fetch(`/admin/warn/${userId}`, {
-      method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'}, body: JSON.stringify({note})
+  }).catch(err=>{
+    openModal(`<h3>UserState — criar ${escapeHtml(userId)}</h3>
+      <form id="frmStateCreate" class="modal-form">
+        <label>State JSON <textarea name="state" rows="8">{}</textarea></label>
+        <div style="margin-top:.6rem"><button type="submit" class="small-btn">Criar</button></div>
+      </form>`);
+    const form = getEl('frmStateCreate');
+    form && form.addEventListener('submit', async e=>{
+      e.preventDefault();
+      try {
+        const body = Object.fromEntries(new FormData(form).entries());
+        const payload = JSON.parse(body.state || '{}');
+        await safeFetch(`/admin/userstate/${encodeURIComponent(userId)}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        alert('UserState criado'); closeModal();
+      } catch (err) { alert('Erro criar userstate: '+(err.message||err)); console.error(err); }
     });
-    if (!resp.ok) {
-      const j = await resp.json().catch(()=>({error:'erro'}));
-      alert(j.error || 'Erro ao advertir');
-      return;
-    }
-    alert('Aviso registrado');
-    loadUsers();
-  } catch (err) { console.error(err); alert('Erro ao advertir'); }
+  });
 }
 
-function promptTopup(userId){
-  const v = prompt('Valor (créditos) para adicionar:', '100');
-  if (!v) return;
-  const amount = parseInt(v);
-  if (isNaN(amount)) { alert('Valor inválido'); return; }
-  topupUser(userId, amount);
+/* ---------- modal / helpers ---------- */
+function openModal(html){
+  const modal = getEl('modal');
+  if (!modal) {
+    console.warn('modal element not found');
+    return;
+  }
+  getEl('modalBody').innerHTML = html;
+  modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
+  getEl('modalClose').onclick = closeModal;
 }
+function closeModal(){ const m = getEl('modal'); if (!m) return; m.classList.add('hidden'); m.setAttribute('aria-hidden','true'); }
+document.addEventListener('click', (e)=>{ if(e.target && e.target.id==='modal') closeModal(); });
 
-async function topupUser(userId, amount){
-  try {
-    const resp = await fetch('/admin/topup', {
-      method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, amount})
-    });
-    if (!resp.ok) { const j = await resp.json().catch(()=>({error:'erro'})); alert(j.error||'Erro topup'); return; }
-    alert('Créditos adicionados');
-    loadUsers();
-  } catch (err) { console.error(err); alert('Erro topup'); }
-}
-
-async function showUser(userId){
-  try {
-    const resp = await fetch(`/admin/users/${userId}`, {credentials:'same-origin'});
-    if (!resp.ok) { alert('Usuário não encontrado'); return; }
-    const u = await resp.json();
-    openModal(`<h3>Usuário: ${escapeHtml(u.username||'—')}</h3>
-               <p>Email: ${escapeHtml(u.email||'—')}</p>
-               <p>Role: ${escapeHtml(u.role||'—')}</p>
-               <p>Credits: ${escapeHtml(String(u.credits||0))}</p>
-               <pre style="white-space:pre-wrap;margin-top:.6rem">${escapeHtml(JSON.stringify(u, null, 2))}</pre>`);
-  } catch (err) { console.error(err); alert('Erro'); }
-}
-
-async function showOrder(orderId){
-  try {
-    const resp = await fetch(`/admin/orders/${orderId}`, {credentials:'same-origin'});
-    if (!resp.ok) { alert('Pedido não encontrado'); return; }
-    const o = await resp.json();
-    openModal(`<h3>Pedido: ${escapeHtml(o.order_id||'—')}</h3>
-               <p>User: ${escapeHtml(o.user_id||'—')}</p>
-               <p>Total: ${escapeHtml(String(o.total_credits||o.total||0))} pts</p>
-               <p>Status: ${escapeHtml(o.status||'—')}</p>
-               <pre style="white-space:pre-wrap;margin-top:.6rem">${escapeHtml(JSON.stringify(o, null, 2))}</pre>`);
-  } catch (err) { console.error(err); alert('Erro'); }
-}
-
-function promptUpdateOrder(orderId){
-  const newStatus = prompt('Novo status (pending / out_for_delivery / delivered / canceled):','delivered');
-  if (!newStatus) return;
-  updateOrderStatus(orderId, newStatus);
-}
-
-async function updateOrderStatus(orderId, status){
-  try {
-    const resp = await fetch(`/admin/orders/${orderId}`, {
-      method:'PUT', credentials:'same-origin', headers:{'Content-Type':'application/json'}, body: JSON.stringify({status})
-    });
-    if (!resp.ok) { const j = await resp.json().catch(()=>({error:'erro'})); alert(j.error||'Erro'); return; }
-    alert('Status atualizado');
-    loadOrders(); loadOverview();
-  } catch (err) { console.error(err); alert('Erro'); }
-}
-
-/* ------------------- EXPORT & HELPERS ------------------- */
 async function exportBackup(){
   try {
-    const resp = await fetch('/admin/export', {credentials:'same-origin'});
-    if (!resp.ok) { alert('Erro ao exportar'); return; }
+    const resp = await fetch('/admin/export', { credentials:'same-origin' });
+    if (!resp.ok) { const t = await resp.text().catch(()=>null); alert('Erro ao exportar: ' + (t || resp.status)); return; }
     const blob = await resp.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'backup_all.json'; document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
-  } catch (err) { console.error(err); alert('Erro export'); }
+  } catch (err) { alert('Erro export: '+(err.message||err)); console.error(err); }
 }
 
-function openModal(html){
-  const modal = document.getElementById('modal');
-  document.getElementById('modalBody').innerHTML = html;
-  modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
-  document.getElementById('modalClose').onclick = closeModal;
+async function logout(){ try { await safeFetch('/logout', { method:'POST' }); } catch(e){} window.location.href = '/'; }
+
+function createBtn(text, onClick, kind=''){
+  const b = document.createElement('button');
+  b.className = 'small-btn ' + (kind||'');
+  b.innerText = text;
+  b.addEventListener('click', (ev)=>{ ev.stopPropagation(); try { onClick(); } catch (err) { console.error('button handler error', err); } });
+  return b;
 }
-function closeModal(){ document.getElementById('modal').classList.add('hidden'); document.getElementById('modal').setAttribute('aria-hidden','true'); }
-document.getElementById && document.addEventListener('click', (e)=>{ if(e.target && e.target.id==='modal') closeModal(); });
-
-async function logout(){ await fetch('/logout',{method:'POST', credentials:'same-origin'}); window.location.href = '/'; }
-
-/* ------------------- small helpers ------------------- */
 function escapeHtml(s){ if(!s && s!==0) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }

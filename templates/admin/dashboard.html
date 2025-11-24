@@ -69,9 +69,11 @@
         </div>
       </section>
 
+      <!-- USERS -->
       <section id="users" class="section">
         <div class="panel">
           <h3>Usuários</h3>
+
           <div class="controls-row">
             <input id="userSearch" placeholder="Pesquisar por email/username..." />
             <select id="filterRole">
@@ -82,15 +84,18 @@
               <option value="entregador">Entregador</option>
             </select>
             <button id="refreshUsers" class="small-btn">Atualizar</button>
+            <button id="createUserBtn" class="small-btn primary">➕ Criar Usuário</button>
           </div>
 
           <div id="usersTable" class="table-wrapper"></div>
         </div>
       </section>
 
+      <!-- ORDERS -->
       <section id="orders" class="section">
         <div class="panel">
           <h3>Pedidos</h3>
+
           <div class="controls-row">
             <input id="orderSearch" placeholder="Pesquisar por order_id / usuário..." />
             <select id="orderFilterStatus">
@@ -101,30 +106,37 @@
               <option value="canceled">canceled</option>
             </select>
             <button id="refreshOrders" class="small-btn">Atualizar</button>
+            <button id="createOrderBtn" class="small-btn primary">➕ Criar Pedido</button>
           </div>
 
           <div id="ordersTable" class="table-wrapper"></div>
         </div>
       </section>
 
+      <!-- ENTERPRISES -->
       <section id="enterprises" class="section">
         <div class="panel">
           <h3>Empresas</h3>
+
           <div class="controls-row">
             <input id="enterpriseSearch" placeholder="Pesquisar por nome / id..." />
             <button id="refreshEnterprises" class="small-btn">Atualizar</button>
+            <button id="createEnterpriseBtn" class="small-btn primary">➕ Criar Empresa</button>
           </div>
 
           <div id="enterprisesTable" class="table-wrapper"></div>
         </div>
       </section>
 
+      <!-- TRANSACTIONS -->
       <section id="transactions" class="section">
         <div class="panel">
           <h3>Transações</h3>
+
           <div class="controls-row">
             <input id="txSearch" placeholder="Pesquisar tx_id / usuário..." />
             <button id="refreshTx" class="small-btn">Atualizar</button>
+            <button id="createTxBtn" class="small-btn primary">➕ Registrar Transação</button>
           </div>
 
           <div id="txTable" class="table-wrapper"></div>
@@ -148,7 +160,11 @@
       <div class="cell usercol"></div>
       <div class="cell rolecol"></div>
       <div class="cell creditcol"></div>
-      <div class="cell actioncol"></div>
+      <div class="cell actioncol">
+        <button class="small-btn edit-user">✏ Editar</button>
+        <button class="small-btn credit-user">💰 Créditos</button>
+        <button class="small-btn delete-user red">🗑 Excluir</button>
+      </div>
     </div>
   </template>
 
@@ -158,10 +174,13 @@
       <div class="cell usercol"></div>
       <div class="cell totalcol"></div>
       <div class="cell statuscol"></div>
-      <div class="cell actioncol"></div>
+      <div class="cell actioncol">
+        <button class="small-btn edit-order">✏ Editar</button>
+        <button class="small-btn delete-order red">🗑 Excluir</button>
+      </div>
     </div>
   </template>
 
-    <script defer src="{{ url_for('static', filename='scripts/dashboardAdmin.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='scripts/dashboardAdmin.js') }}"></script>
 </body>
 </html>

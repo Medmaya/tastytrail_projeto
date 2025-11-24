@@ -587,3 +587,118 @@ def admin_topup():
             write_json(TX_F, txs)
             return jsonify({"message":"topped up (fallback)","tx":tx}), 200
     return jsonify({"error":"user not found"}), 404
+
+# ----------------- Orders (CREATE) -----------------
+@admin_bp.route("/orders", methods=["POST"])
+@admin_only
+def create_order_admin():
+    payload = request.get_json() or {}
+    user_id = payload.get("user_id")
+    items = payload.get("items", [])  # esperado: lista de {product_id, quantity, enterprise_id (opcional)}
+    if not user_id or not items:
+        return jsonify({"error":"user_id and items required"}), 400
+
+    # calcula total com base em ENTERPRISE_F
+    ents = read_json(ENTERPRISE_F, {})
+    total = 0
+    for it in items:
+        pid = it.get("product_id")
+        qty = int(it.get("quantity", 1))
+        # procura produto
+        found = None
+        for ent_id, ent in ents.items():
+            for p in ent.get("products", []):
+                if p.get("id") == pid:
+                    found = (ent_id, p)
+                    break
+            if found:
+                break
+        if not found:
+            continue
+        _, p = found
+        total += int(p.get("price_credits", 0)) * qty
+
+    orders = read_json(ORDERS_F, [])
+    order = {
+        "order_id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "items": items,
+        "total_credits": total,
+        "status": payload.get("status","pending"),
+        "created_at": now_iso(),
+        "enterprise_id": items[0].get("enterprise_id") if items and items[0].get("enterprise_id") else None
+    }
+    orders.append(order)
+    write_json(ORDERS_F, orders)
+
+    # opcional: add order id to userstate
+    us = read_json(USERSTATE_F, {})
+    st = us.get(str(user_id), {"cart":[], "orders":[]})
+    st.setdefault("orders", []).append(order["order_id"])
+    us[str(user_id)] = st
+    write_json(USERSTATE_F, us)
+
+    return jsonify({"message":"order created", "order": order}), 201
+
+# ----------------- Transactions (CREATE) -----------------
+@admin_bp.route("/transactions", methods=["POST"])
+@admin_only
+def create_transaction_admin():
+    payload = request.get_json() or {}
+    tx_id = str(uuid.uuid4())
+    tx = {
+        "tx_id": tx_id,
+        "type": payload.get("type","manual"),
+        "from": payload.get("from"),
+        "to": payload.get("to"),
+        "amount": int(payload.get("amount", 0)),
+        "meta": payload.get("meta", {}),
+        "created_at": now_iso()
+    }
+    txs = read_json(TX_F, [])
+    txs.append(tx)
+    write_json(TX_F, txs)
+    return jsonify({"message":"transaction created", "tx": tx}), 201
+
+# ----------------- Delivery user (CREATE) -----------------
+@admin_bp.route("/delivery", methods=["POST"])
+@admin_only
+def create_delivery_user_admin():
+    payload = request.get_json() or {}
+    did = str(uuid.uuid4())
+    dels = read_json(DELIVERY_F, {})
+    d = {
+        "assigned_orders": payload.get("assigned_orders", []),
+        "status": payload.get("status", "available"),
+        "rating": payload.get("rating", 0),
+        "balance": int(payload.get("balance", 0)),
+        "profile": payload.get("profile", {})
+    }
+    dels[did] = d
+    write_json(DELIVERY_F, dels)
+    return jsonify({"message":"delivery user created","id":did, "delivery": d}), 201
+
+# ----------------- Quick userstate update (PUT by admin) -----------------
+@admin_bp.route("/userstate/<user_id>", methods=["POST"])
+@admin_only
+def create_or_update_userstate_admin(user_id):
+    payload = request.get_json() or {}
+    us = read_json(USERSTATE_F, {})
+    st = us.get(str(user_id), {"cart": [], "favorites": {}, "orders": [], "preferences": {}})
+    # merge shallow
+    for k in ("cart","favorites","orders","preferences"):
+        if k in payload:
+            st[k] = payload[k]
+    us[str(user_id)] = st
+    write_json(USERSTATE_F, us)
+    return jsonify({"message":"userstate updated", "userstate": st}), 200
+
+@admin_bp.route("/api/enterprises", methods=["GET"])
+@require_role('admin')
+def api_get_enterprises():
+    enterprises = [u for u in USERS.values() if u.get("role") == "empresa"]
+
+    return jsonify({
+        "enterprises": enterprises,
+        "count": len(enterprises)
+    })

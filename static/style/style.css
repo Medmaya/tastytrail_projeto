@@ -264,7 +264,7 @@ section {
 }
 
 .card {
-  background-color: var(--bg);
+  background-color: #171717;
   border: 0.1vw solid var(--letter);
   border-radius: 0 1.2vw 1.2vw 1.2vw;
   box-shadow: 0.2vw 0.2vw 1vw #cc4b4d8b;
@@ -566,6 +566,11 @@ section {
   display: flex;
   margin-bottom: 15vh;
 }
+
+.card {
+  background-color: #251c1cd0;
+}
+
 
 .contatos-container {
   display: flex;
