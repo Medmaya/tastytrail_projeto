@@ -7,7 +7,7 @@ from routes.entregador_routes import entregador_bp
 from page_routes import register_routes
 
 app = Flask(__name__)
-app.secret_key = "chave-super-secreta"
+app.secret_key = "TastySecretTail"
 
 # --- REGISTRO DE BLUEPRINTS ---
 app.register_blueprint(main_bp)

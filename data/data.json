@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "66c1b643-854b-485f-879b-c63d300e19bc",
+      "username": "cliente10",
+      "email": "cliente10@gmail.com",
+      "password_hash": "4BGfP9JZJAIVLPCN1YP+zs+Bg1ELoUO0JhlEFe25wsAzyLbWv6A/8Uo7io91/oCc",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "client_data": {
+        "full_name": "Cliente 10",
+        "address": "Travessa Airton Teodoro, 200",
+        "phone": "11998403000"
+      }
+    }
+  ],
+  "orders": [],
+  "transactions": [],
+  "enterprises": []
+}
