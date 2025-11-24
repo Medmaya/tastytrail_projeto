@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tasty Trail — Painel Entregador</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboardEntregador.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+
+    <aside class="sidebar">
+      <h1 class="logo">TASTY TRAIL</h1>
+      <p class="subtitle">Painel do Entregador</p>
+
+      <nav class="menu">
+        <button data-section="overview" class="menu-btn active">🏠 Início</button>
+        <button data-section="ongoing" class="menu-btn">🛵 Em andamento</button>
+        <button data-section="available" class="menu-btn">📦 Disponíveis</button>
+        <button data-section="history" class="menu-btn">📜 Histórico</button>
+        <button id="themeToggle" class="menu-btn">🌓 Tema</button>
+      </nav>
+
+      <div class="account">
+        <p class="account-title">Conta</p>
+        <ul>
+          <li id="showProfile">👤 Perfil</li>
+          <li id="logoutBtn">🚪 Sair</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h2 class="page-title">Início</h2>
+          <p class="page-sub">Visão geral das suas entregas</p>
+        </div>
+        <div class="top-actions">
+          <div class="balance">Saldo: <strong id="balanceValue">R$ —</strong></div>
+          <div class="refresh"><button id="refreshBtn">Atualizar</button></div>
+        </div>
+      </header>
+
+      <section id="overview" class="section active">
+        <div class="stats-grid">
+          <div class="card">
+            <p>Ganhos (mês)</p>
+            <h3 id="monthEarnings">R$ —</h3>
+          </div>
+          <div class="card">
+            <p>Entregas hoje</p>
+            <h3 id="todayCount">—</h3>
+          </div>
+          <div class="card">
+            <p>Avaliação média</p>
+            <h3 id="rating">—</h3>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h3>Ganhos últimos 7 dias</h3>
+          <canvas id="earningsChart" aria-label="Gráfico de ganhos"></canvas>
+        </div>
+      </section>
+
+      <section id="ongoing" class="section">
+        <h3>Entregas em andamento</h3>
+        <div id="ongoingList" class="list-grid">
+          <!-- itens preenchidos por JS -->
+        </div>
+      </section>
+
+      <section id="available" class="section">
+        <h3>Pedidos disponíveis</h3>
+        <div id="availableNote" class="muted">Carregando pedidos disponíveis...</div>
+        <div id="availableList" class="list-grid" hidden>
+          <!-- itens preenchidos por JS -->
+        </div>
+      </section>
+
+      <section id="history" class="section">
+        <h3>Histórico de entregas</h3>
+        <div id="historyList" class="list-grid">
+          <!-- itens preenchidos por JS -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <template id="orderCardTpl">
+    <div class="order-card">
+      <div class="order-line">
+        <div>
+          <p class="order-id">#ID</p>
+          <p class="order-info">Produto • Restaurante</p>
+        </div>
+        <div>
+          <p class="order-meta">—</p>
+        </div>
+      </div>
+      <p class="order-address">Endereço</p>
+      <div class="order-actions">
+        <button class="btn btn-accept">Aceitar</button>
+        <button class="btn btn-complete">Concluir</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="{{ url_for('static', filename='scripts/dashboardEntregador.js') }}"></script>
+</body>
+</html>

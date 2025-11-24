@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tasty Trail — Dashboard da Empresa</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboardEmpresa.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="empresaRoot" class="dashboard-root" data-theme="light">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">TASTY<span class="trail"> TRAIL</span></div>
+        <button id="themeToggle" title="Alternar tema">🌓</button>
+      </div>
+
+      <p class="subtitle">Painel da Empresa</p>
+
+      <nav class="nav">
+        <ul id="menu" class="menu">
+          <li class="menu-item active" data-section="overview">🏁 Visão geral</li>
+          <li class="menu-item" data-section="products">🍽 Produtos</li>
+          <li class="menu-item" data-section="orders">📦 Pedidos</li>
+          <li class="menu-item" data-section="payouts">💸 Saques</li>
+        </ul>
+      </nav>
+
+      <div class="account">
+        <p class="account-title">Conta</p>
+        <ul>
+          <li id="linkProfile" class="acc-item">👤 Perfil</li>
+          <li id="logoutBtn" class="acc-item">🚪 Sair</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <h1 id="pageTitle" class="page-title">Olá, Empresa</h1>
+          <p class="page-sub">Resumo rápido do seu estabelecimento</p>
+        </div>
+        <div class="header-actions">
+          <div class="credits">
+            <small>Saldo (créditos)</small>
+            <strong id="enterpriseBalance">—</strong>
+          </div>
+          <button id="refreshBtn" class="icon-btn" title="Atualizar">⟳</button>
+        </div>
+      </header>
+
+      <!-- Overview -->
+      <section id="section-overview" class="section">
+        <div class="cards-grid">
+          <div class="stat-card">
+            <span class="label">Vendas (mês)</span>
+            <strong id="statMonthSales">—</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Pedidos</span>
+            <strong id="statTotalOrders">—</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Clientes únicos</span>
+            <strong id="statClients">—</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Produtos ativos</span>
+            <strong id="statProducts">—</strong>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="panel chart-panel">
+            <h3>Vendas por mês</h3>
+            <div id="chartPlaceholder" class="chart-placeholder">
+              <!-- se quiser, depois integramos Chart.js -->
+              <p class="muted">Gráfico disponível (integração futura)</p>
+            </div>
+          </div>
+
+          <div class="panel quick-actions">
+            <h3>Ações rápidas</h3>
+            <div class="action-list">
+              <button id="createProductBtn" class="btn">+ Criar produto</button>
+              <button id="openProductsBtn" class="btn ghost">Ver produtos</button>
+              <button id="openOrdersBtn" class="btn ghost">Ver pedidos</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="section-products" class="section hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Produtos</h2>
+            <div class="panel-controls">
+              <input id="searchProduct" placeholder="Pesquisar produto..." />
+              <button id="btnNewProduct" class="btn">Novo</button>
+            </div>
+          </div>
+
+          <div id="productsList" class="list-grid">
+            <p class="muted">Carregando produtos...</p>
+          </div>
+
+          <!-- new/edit product form (toggle) -->
+          <div id="productFormWrap" class="panel product-form hidden">
+            <h3 id="productFormTitle">Novo produto</h3>
+            <form id="productForm">
+              <div class="form-row"><label>Nome</label><input name="name" required /></div>
+              <div class="form-row"><label>Preço (créditos)</label><input name="price_credits" type="number" required /></div>
+              <div class="form-row"><label>Descrição</label><textarea name="description"></textarea></div>
+              <div class="form-row"><label>Ingredientes (vírgula)</label><input name="ingredients" /></div>
+              <div class="form-row actions">
+                <button type="submit" class="btn">Salvar</button>
+                <button type="button" id="cancelProduct" class="btn ghost">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="section-orders" class="section hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Pedidos recebidos</h2>
+            <div class="panel-controls">
+              <select id="filterOrderStatus">
+                <option value="">Todos</option>
+                <option value="pending">Pendente</option>
+                <option value="out_for_delivery">Em entrega</option>
+                <option value="delivered">Entregue</option>
+                <option value="canceled">Cancelado</option>
+              </select>
+              <button id="refreshOrders" class="btn ghost">Atualizar</button>
+            </div>
+          </div>
+
+          <div id="ordersList">
+            <p class="muted">Carregando pedidos...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAYOUTS -->
+      <section id="section-payouts" class="section hidden">
+        <div class="panel">
+          <h2>Solicitar saque</h2>
+          <div class="payout-area">
+            <div class="form-row">
+              <label>Valor (créditos)</label>
+              <input id="payoutAmount" type="number" min="1" />
+            </div>
+            <div class="form-row actions">
+              <button id="requestPayoutBtn" class="btn">Solicitar saque</button>
+            </div>
+            <div id="payoutResult" class="muted"></div>
+          </div>
+
+          <hr />
+
+          <h3>Histórico de saques</h3>
+          <div id="payoutsList" class="muted">Carregando histórico...</div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='scripts/dashboardEmpresa.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap" rel="stylesheet">
+  <title>Tasty Trail - Inicio</title>
+</head>
+
+<body>
+  <header class="header">
+    <section>
+      <a href="/" class="logo">
+        <img src="{{ url_for('static', filename='img/Logo.svg') }}" alt="logo" class="logotipo" />
+      </a>
+
+      <nav class="navbar">
+        <a href="/">Home</a>
+        <a href="/produtos">Produtos</a>
+        <a href="/contatos">Contatos</a>
+        <a href="/sobre">Sobre</a>
+      </nav>
+
+      <form class="searchbox" action="/buscar" method="get">
+        <input type="search" name="q" placeholder="O que você quer comer hoje?" />
+        <button type="submit">
+          <img width="20" height="20" src="https://img.icons8.com/forma-thin/20/search.png" alt="search" />
+        </button>
+      </form>
+      
+      <div class="icons">
+          <a href="/login">
+            <img
+              src="{{ url_for('static', filename='img/Person.svg') }}"
+              id="person"
+              alt="person"
+            />
+          </a>
+          <a href="">
+            <img
+              src="{{ url_for('static', filename='img/Cart.svg') }}"
+              id="cart"
+              alt="Cart"
+            />
+          </a>
+        </div>      
+    </section>
+  </header>
+
+  <section class="sobre-menu">
+    <div class="sobre">
+      <h1>Nossas Localizações</h1>
+    </div>
+
+    <div class="sobre-cards">
+      <div class="card-local">
+        <img src ="{{ url_for('static', filename='img/Local1.svg') }}" alt="Local 1">
+        <p>Rua Venezia, 240</p>
+      </div>
+
+      <div class="card-local">
+        <img src ="{{ url_for('static', filename='img/Local2.svg') }}" alt="Local 2">
+        <p>Rua das Rosas, 877</p>
+      </div>
+
+      <div class="card-local">
+        <img src ="{{ url_for('static', filename='img/Local3.svg') }}" alt="Local 3">
+        <p>Rua dos Rios, 7899</p>
+      </div>
+    </div>
+
+    <div class="sobre-historia">
+      <h1>Nossa história</h1>
+      <p>Havia uma vez uma pequena cidade costeira, onde os habitantes ansiavam por algo novo, 
+        algo que trouxesse um sopro de aventura e sabor às suas vidas 
+        tranquilas. Foi nesse cenário que nasceu o TastyTrail.
+        A fundadora, Sofia, sempre teve um amor pela culinária global.
+        Desde sua infância, ela viajava através dos livros de receitas de sua avó, 
+        explorando os sabores do mundo sem sair de casa. Com o tempo, 
+        seu desejo de compartilhar essa paixão com sua comunidade cresceu, 
+        e assim nasceu a ideia do TastyTrail - um restaurante que seria uma viagem gastronômica para todos os que o visitassem.</p>
+    </div>
+  </section>
+
+
+   <footer class="footer">
+        <div class="footer-content">
+
+            <div class="footer-left">
+                <img
+                    id="text-logo"
+                    src="{{ url_for('static', filename='img/Group 1.svg') }}"
+                    alt="text-logo"
+                >
+                <div class="socials">
+                    <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png" alt="facebook"></a>
+                    <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="instagram"></a>
+                    <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png" alt="twitter"></a>
+                </div>
+            </div>
+
+            <div class="footer-center">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="/produtos">Produtos</a></li>
+                    <li><a href="/contatos">Contatos</a></li>
+                    <li><a href="/sobre">Sobre</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-right">
+                <h3>Precisa de ajuda?</h3>
+                <p>tastytrail@gmail.com</p>
+                <p>11 98334 9999</p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>2025 all Right Reserved</p>
+        </div>
+    </footer>
+</body>
+
+</html>

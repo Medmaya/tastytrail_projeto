@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/login.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap"
+      rel="stylesheet" />
+      <title>Tasty Trail - Login</title>
+  </head>
+
+  <body>
+    <header class="header">
+      <section>
+        <a href="/" class="logo">
+          <img
+            src="{{ url_for('static', filename='img/Logo.svg') }}"
+            alt="logo"
+            class="logotipo"
+          />
+        </a>
+
+        <nav class="navbar">
+          <a href="/">Home</a>
+          <a href="/produtos">Produtos</a>
+          <a href="/contatos">Contatos</a>
+          <a href="/sobre">Sobre</a>
+        </nav>
+
+        <form class="searchbox" action="/buscar" method="get">
+          <input
+            type="search"
+            name="q"
+            placeholder="O que você quer comer hoje?"
+            autocomplete="off"
+          />
+          <button type="submit">
+            <img
+              width="20"
+              height="20"
+              src="https://img.icons8.com/forma-thin/20/search.png"
+              alt="search"
+            />
+          </button>
+        </form>
+
+        <div class="icons">
+          <a href="/login">
+            <img
+              src="{{ url_for('static', filename='img/Person.svg') }}"
+              id="person"
+              alt="person"
+            />
+          </a>
+          <a href="">
+            <img
+              src="{{ url_for('static', filename='img/Cart.svg') }}"
+              id="cart"
+              alt="Cart"
+            />
+          </a>
+        </div>
+      </section>
+    </header>
+
+    <main class="site-main">
+      <div class="hero" role="region" aria-label="Login hero">
+        <div class="card">
+          <h2>Bem-vindo(a) de volta</h2>
+          <p class="lead">Faça o login</p>
+
+          <form id="loginForm" action="/login" method="POST">
+            <div class="field">
+              <label for="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="password">Senha:</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <a class="forgot" href="#">Esqueceu sua senha?</a>
+
+            <button class="btn" type="submit">Login</button>
+          </form>
+
+          <p class="signup">
+            Não tem uma conta?
+            <a href="/registro">Crie agora</a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <img
+            id="text-logo"
+            src="{{ url_for('static', filename='img/Group 1.svg') }}"
+            alt="text-logo"
+          />
+          <div class="socials">
+            <a href="#"
+              ><img
+                src="https://img.icons8.com/ios-filled/50/ffffff/facebook.png"
+                alt="facebook"
+            /></a>
+            <a href="#"
+              ><img
+                src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png"
+                alt="instagram"
+            /></a>
+            <a href="#"
+              ><img
+                src="https://img.icons8.com/ios-filled/50/ffffff/twitter.png"
+                alt="twitter"
+            /></a>
+          </div>
+        </div>
+
+        <div class="footer-center">
+          <h3>Informações</h3>
+          <ul>
+            <li><a href="#">Produtos</a></li>
+            <li><a href="#">Contatos</a></li>
+            <li><a href="#">Sobre</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-right">
+          <h3>Precisa de ajuda?</h3>
+          <p>tastytrail@gmail.com</p>
+          <p>11 98334 9999</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>2025 - Todos os direitos reservados</p>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='scripts/login.js') }}"></script>
+  </body>
+</html>

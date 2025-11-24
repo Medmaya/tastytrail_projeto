@@ -3,36 +3,58 @@ import json
 
 BASE_URL = "http://127.0.0.1:5000"
 
-def create_user(username, password, role):
-    """Envia uma requisição para criar usuário no servidor Flask"""
-    data = {
-        "username": username,
-        "password": password,
-        "role": role
-    }
+def test_route(endpoint, method="GET", body=None):
+    """
+    Testa qualquer rota Flask.
+    - endpoint: string (ex: '/register')
+    - method: string ('GET', 'POST', 'PUT', 'DELETE')
+    - body: dicionário (ex: {"username": "teste"})
+    """
+    url = f"{BASE_URL}{endpoint}"
 
-    response = requests.post(f"{BASE_URL}/register", json=data)
+    headers = {"Content-Type": "application/json"}
 
-    print(f"-> Criando usuário {username}:")
-    print("Status:", response.status_code)
-    print("Resposta:", response.json())
-    print("-" * 40)
+    print(f"Testando {method} {url}")
+    if body:
+        print("Body:", json.dumps(body, indent=2))
 
+    try:
+        if method.upper() == "GET":
+            response = requests.get(url, headers=headers, json=body)
+        elif method.upper() == "POST":
+            response = requests.post(url, headers=headers, json=body)
+        elif method.upper() == "PUT":
+            response = requests.put(url, headers=headers, json=body)
+        elif method.upper() == "DELETE":
+            response = requests.delete(url, headers=headers, json=body)
+        else:
+            print(f"Método {method} não suportado.")
+            return
 
-def list_users():
-    """Mostra todos os usuários cadastrados"""
-    response = requests.get(f"{BASE_URL}/users")
-    print("Usuários cadastrados:")
-    print(json.dumps(response.json(), indent=4, ensure_ascii=False))
-    print("=" * 40)
+        print("Status:", response.status_code)
+        try:
+            print("Resposta:", json.dumps(response.json(), indent=2, ensure_ascii=False))
+        except Exception:
+            print("Resposta (texto):", response.text)
+        print("-" * 60)
+
+    except requests.exceptions.ConnectionError:
+        print("Não foi possível conectar ao servidor Flask.")
+    except Exception as e:
+        print(f"Erro: {e}")
 
 
 if __name__ == "__main__":
-    # Da pra criarmos quantos quiser pra testar:
-    create_user("admin", "123", "admin")
-    create_user("empresa01", "abc", "empresa")
-    create_user("cliente01", "senha", "cliente")
-    create_user("entregador01", "bike", "entregador")
+    test_route("/register", "POST", {
+        "username": "cliente03",
+        "password": "abc123",
+        "email": "cliente03@gmail.com",
+        "role": "cliente"
+    })
 
-    # Listar todos
-    list_users()
+    test_route("/login", "POST", {
+        "email": "cliente03@gmail.com",
+        "password": "abc123"
+    })
+
+    test_route("/logout", "POST")

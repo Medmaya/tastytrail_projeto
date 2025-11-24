@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tasty Trail — Painel do Cliente</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/dashboardCliente.css') }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="dashboard-root" id="dashboardRoot" data-theme="light">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">TASTY<span class="trail"> TRAIL</span></div>
+        <button id="themeToggle" aria-label="Alternar tema" title="Alternar tema">🌓</button>
+      </div>
+
+      <p class="subtitle">Explorando sabores</p>
+
+      <nav class="nav">
+        <ul class="menu" id="menu">
+          <li class="menu-item active" data-section="overview">🏠 Visão geral</li>
+          <li class="menu-item" data-section="orders">📦 Meus pedidos</li>
+          <li class="menu-item" data-section="restaurants">🍽 Restaurantes</li>
+          <li class="menu-item" data-section="order-now">⚡ Pedir Agora</li>
+        </ul>
+      </nav>
+
+      <div class="account">
+        <p class="account-title">Conta</p>
+        <ul>
+          <li class="acc-item" id="linkProfile">👤 Perfil</li>
+          <li class="acc-item" id="linkSettings">⚙ Configurações</li>
+          <li class="acc-item" id="logoutBtn">🚪 Sair</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <h1 class="page-title" id="pageTitle">Olá, cliente</h1>
+          <p class="page-sub">Sua visão geral rápida</p>
+        </div>
+        <div class="header-actions">
+          <div class="credits" title="Seus créditos">
+            <small>Créditos</small>
+            <strong id="userCredits">--</strong>
+          </div>
+        </div>
+      </header>
+
+      <!-- SECTIONS -->
+      <section class="section" id="section-overview" data-section="overview">
+        <div class="cards-grid">
+          <div class="stat-card">
+            <span class="label">Pedidos concluídos</span>
+            <strong id="statOrders">—</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Gasto total</span>
+            <strong id="statSpent">R$ —</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Avaliações feitas</span>
+            <strong id="statReviews">—</strong>
+          </div>
+          <div class="stat-card">
+            <span class="label">Recompensas</span>
+            <strong id="statRewards">— pts</strong>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="panel last-order">
+            <h3>Último pedido</h3>
+            <div id="lastOrderBox" class="placeholder">
+              <p class="muted">Carregando último pedido...</p>
+            </div>
+          </div>
+
+          <div class="panel recommended">
+            <h3>Recomendados pra você</h3>
+            <div id="recommendedGrid" class="recommended-grid">
+              <!-- Cards gerados por JS -->
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="section hidden" id="section-orders" data-section="orders">
+        <h2>Meus pedidos</h2>
+        <div id="ordersBox" class="panel">
+          <p class="muted">Carregando pedidos...</p>
+        </div>
+      </section>
+
+      <section class="section hidden" id="section-restaurants" data-section="restaurants">
+        <h2>Restaurantes / Produtos</h2>
+        <div id="restaurantsBox" class="panel">
+          <p class="muted">Carregando restaurantes...</p>
+        </div>
+      </section>
+
+      <section class="section hidden" id="section-order-now" data-section="order-now">
+        <h2>Pedir Agora</h2>
+        <div class="panel" id="orderNowPanel">
+          <p class="muted">Escolha um restaurante e adicione itens ao carrinho.</p>
+          <div id="orderNowGrid" class="recommended-grid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='scripts/dashboardCliente.js') }}"></script>
+</body>
+</html>
