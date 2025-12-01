@@ -16,7 +16,6 @@ def require_auth():
                 return redirect(url_for('login')) # Redireciona se for acesso via navegador
 
             # 2. Validação no Banco de Dados (Segurança extra)
-            # CORREÇÃO AQUI: Lendo de data.json ao invés de Users.json
             db = read_json(DB_FILE, {"users":[]})
             users = db.get("users", [])
             

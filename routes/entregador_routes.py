@@ -29,7 +29,6 @@ def entregador_only(f):
         return f(*args, **kwargs)
     return wrapper
 
-# --- HELPER PARA ENRIQUECER O PEDIDO COM ENDEREÇO E LOJA ---
 def enrich_order(order, db):
     """Adiciona nome da loja e endereço do cliente ao objeto do pedido"""
     # 1. Nome da Loja

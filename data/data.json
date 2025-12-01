@@ -1,4 +1,5 @@
 {
+  
   "users": [
     {
       "id": "cd67fc98-3239-4b38-8fdd-1540f2a97bb0",
@@ -6,7 +7,7 @@
       "email": "cliente03@gmail.com",
       "password_hash": "6ROSzEeRhOOOv5d/Zn4nGGRY1o4HDSMoEu15LGaFCE70Rq7x74S274U00bsbGRAU",
       "role": "cliente",
-      "credits": 0,
+      "credits": 2,
       "banned": false,
       "warnings": 0,
       "created_at": "2025-11-24T18:25:09.321228Z",
@@ -266,6 +267,38 @@
         "address": "",
         "phone": ""
       }
+    },
+    {
+      "id": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "username": "cliente2",
+      "email": "cliente2@gmail.com",
+      "password_hash": "xMZ8SIE6qDSVIELzgyxq4y7p6iyhw+TaPKvdNXnM6KsofHN7vQ91ju1Gi4JZkpKz",
+      "role": "cliente",
+      "credits": 790,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-24T22:19:23.889112Z",
+      "client_data": {
+        "full_name": "Mayar",
+        "address": "rua adafjofn",
+        "phone": "11940359190"
+      }
+    },
+    {
+      "id": "76f90d61-22bf-4570-b9fd-ec2b869b38f6",
+      "username": "clliente1",
+      "email": "clliente1@gmail.com",
+      "password_hash": "Odf6JKpehGPuCpt8ZCgQoE6ff496FJoKnbDE8iomogBXz8TRQiLYLMjD2MV2amC5",
+      "role": "cliente",
+      "credits": 0,
+      "banned": false,
+      "warnings": 0,
+      "created_at": "2025-11-25T00:17:56.353160Z",
+      "client_data": {
+        "full_name": "Vitor",
+        "address": "Granja Viana",
+        "phone": "11941353190"
+      }
     }
   ],
   "orders": [
@@ -309,8 +342,10 @@
       "subtotal": 58,
       "delivery_fee": 5,
       "total_credits": 63,
-      "status": "pending",
-      "created_at": "2025-11-24T18:28:07.330535Z"
+      "status": "delivered",
+      "created_at": "2025-11-24T18:28:07.330535Z",
+      "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "delivered_at": "2025-11-24T23:59:12.723310Z"
     },
     {
       "order_id": "55df26cd-0820-4e83-a0f6-4b1024148d24",
@@ -457,6 +492,104 @@
       "created_at": "2025-11-24T19:10:21.640251Z",
       "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
       "delivered_at": "2025-11-24T19:11:19.375429Z"
+    },
+    {
+      "order_id": "a4a7bee5-5d96-4283-9cde-073f99cbd250",
+      "user_id": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-24T22:20:31.485200Z"
+        },
+        {
+          "product_id": "2c2927de-e4c1-40ea-8a7b-ce4d41c5d981",
+          "product_name": "Sushi Combo",
+          "enterprise_id": "7d2bca63-b162-4bba-b3e3-6a08435bc21d",
+          "quantity": 1,
+          "price_credits": 47,
+          "added_at": "2025-11-24T22:23:07.816607Z"
+        },
+        {
+          "product_id": "9095e3a1-8119-4498-88a2-db2872fb98dc",
+          "product_name": "Sushi Combo",
+          "enterprise_id": "a2fea9cb-85bb-4703-bd09-60a655c7e334",
+          "quantity": 1,
+          "price_credits": 57,
+          "added_at": "2025-11-24T22:23:09.430706Z"
+        }
+      ],
+      "subtotal": 136,
+      "delivery_fee": 5,
+      "total_credits": 141,
+      "status": "delivered",
+      "created_at": "2025-11-24T22:23:16.305870Z",
+      "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "delivered_at": "2025-11-24T22:24:34.983657Z"
+    },
+    {
+      "order_id": "c0ee5e94-d230-4f8b-b952-bb67adb0985c",
+      "user_id": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-24T22:43:58.183138Z"
+        },
+        {
+          "product_id": "1fb84e91-ac72-41a3-8d84-b801bb446d89",
+          "product_name": "Salada de Parma",
+          "enterprise_id": "bd5b6abd-020c-400f-b71a-ddde85eb85aa",
+          "quantity": 1,
+          "price_credits": 50,
+          "added_at": "2025-11-24T23:57:44.967652Z"
+        }
+      ],
+      "subtotal": 82,
+      "delivery_fee": 5,
+      "total_credits": 87,
+      "status": "delivered",
+      "created_at": "2025-11-24T23:57:49.278513Z",
+      "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "delivered_at": "2025-11-25T00:21:37.854317Z"
+    },
+    {
+      "order_id": "af757aac-ae9f-4f3c-96f7-624e1960e863",
+      "user_id": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+      "items": [
+        {
+          "product_id": "99d6ad45-37d3-48cb-9053-fb3df3340278",
+          "product_name": "X-Bacon",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 32,
+          "added_at": "2025-11-25T00:20:10.803224Z"
+        },
+        {
+          "product_id": "8dff815f-fcaf-4a6b-aa9b-2699270643fe",
+          "product_name": "Açaí 500ml",
+          "enterprise_id": "65773330-7e31-4f4f-873f-f388180722b4",
+          "quantity": 1,
+          "price_credits": 56,
+          "added_at": "2025-11-25T00:20:21.922734Z"
+        }
+      ],
+      "subtotal": 88,
+      "delivery_fee": 5,
+      "total_credits": 93,
+      "status": "delivered",
+      "created_at": "2025-11-25T00:20:32.874398Z",
+      "assigned_delivery": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "delivered_at": "2025-11-25T00:22:02.881769Z"
     }
   ],
   "transactions": [
@@ -576,6 +709,82 @@
         "order": "fbdad94c-f088-4435-96c3-ea9b6ed2cd64"
       },
       "created_at": "2025-11-24T19:11:19.375503Z"
+    },
+    {
+      "tx_id": "e1bc2b65-bbfd-4b61-b5ef-ad7d9241fe7b",
+      "type": "purchase",
+      "from": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "to": "system",
+      "amount": 141,
+      "meta": {
+        "subtotal": 136,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T22:23:16.292011Z"
+    },
+    {
+      "tx_id": "f55d5953-d643-40e7-bb48-8e210d2908b9",
+      "type": "credit_delivery",
+      "to": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "amount": 5,
+      "meta": {
+        "order": "a4a7bee5-5d96-4283-9cde-073f99cbd250"
+      },
+      "created_at": "2025-11-24T22:24:34.983710Z"
+    },
+    {
+      "tx_id": "13e06840-330b-413b-b985-5bde78e4272c",
+      "type": "purchase",
+      "from": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "to": "system",
+      "amount": 87,
+      "meta": {
+        "subtotal": 82,
+        "fee": 5
+      },
+      "created_at": "2025-11-24T23:57:49.278420Z"
+    },
+    {
+      "tx_id": "603f2ce2-df66-4709-96a8-78d25fc2b9f8",
+      "type": "credit_delivery",
+      "to": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "amount": 5,
+      "meta": {
+        "order": "ffb13fce-d52b-4f10-b469-fbfa11acb2d0"
+      },
+      "created_at": "2025-11-24T23:59:12.723356Z"
+    },
+    {
+      "tx_id": "6775054a-b817-4790-b3ce-9816869439f3",
+      "type": "purchase",
+      "from": "d920e3ca-dc4e-4a3f-ad96-b29266985284",
+      "to": "system",
+      "amount": 93,
+      "meta": {
+        "subtotal": 88,
+        "fee": 5
+      },
+      "created_at": "2025-11-25T00:20:32.874358Z"
+    },
+    {
+      "tx_id": "7cbb3316-1780-4144-a4bf-331c71aaf7c4",
+      "type": "credit_delivery",
+      "to": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "amount": 5,
+      "meta": {
+        "order": "c0ee5e94-d230-4f8b-b952-bb67adb0985c"
+      },
+      "created_at": "2025-11-25T00:21:37.854401Z"
+    },
+    {
+      "tx_id": "e39fe1b3-b26b-4107-b97b-1bebac98c432",
+      "type": "credit_delivery",
+      "to": "54a4307e-e415-49d1-8b32-782ed489f634",
+      "amount": 5,
+      "meta": {
+        "order": "af757aac-ae9f-4f3c-96f7-624e1960e863"
+      },
+      "created_at": "2025-11-25T00:22:02.881839Z"
     }
   ],
   "enterprises": [
@@ -745,7 +954,19 @@
       "owner": "bd5b6abd-020c-400f-b71a-ddde85eb85aa",
       "name": "Rio Branco",
       "cnpj": "00.623.904/0001-73",
-      "products": [],
+      "products": [
+        {
+          "id": "84a08dba-8752-4e6c-abc5-8f7e3cb9f8e9",
+          "name": "Salada de Parma",
+          "price_credits": 50,
+          "description": "Comida Italiana",
+          "ingredients": [
+            "alface",
+            "parma"
+          ],
+          "reviews": []
+        }
+      ],
       "balance": 0,
       "created_at": "2025-11-24T19:00:08.164492Z"
     }
@@ -754,7 +975,7 @@
     "54a4307e-e415-49d1-8b32-782ed489f634": {
       "assigned_orders": [],
       "status": "available",
-      "balance": 10
+      "balance": 30
     },
     "594bb0a3-bdce-4ef5-8deb-4a21a3e4e417": {
       "assigned_orders": [],
@@ -769,6 +990,20 @@
       "orders": [
         "fbdad94c-f088-4435-96c3-ea9b6ed2cd64"
       ]
+    },
+    "d920e3ca-dc4e-4a3f-ad96-b29266985284": {
+      "cart": [],
+      "favorites": {},
+      "orders": [
+        "a4a7bee5-5d96-4283-9cde-073f99cbd250",
+        "c0ee5e94-d230-4f8b-b952-bb67adb0985c",
+        "af757aac-ae9f-4f3c-96f7-624e1960e863"
+      ]
+    },
+    "76f90d61-22bf-4570-b9fd-ec2b869b38f6": {
+      "cart": [],
+      "favorites": {},
+      "orders": []
     }
   }
 }
