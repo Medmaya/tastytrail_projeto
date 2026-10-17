@@ -1,52 +1,38 @@
 # 🍽️ TastyTrail
 
-**Descubra novos sabores e explore experiências gastronômicas!**
+Projeto acadêmico desenvolvido durante o **2º semestre do curso de Sistemas de Informação das Faculdades Integradas Rio Branco**, na disciplina de **Lógica de Programação**.
 
-O TastyTrail é um projeto de desenvolvimento de software criado com o objetivo de [descreva o principal objetivo da aplicação]. A proposta é oferecer aos usuários uma experiência prática e intuitiva para [principal funcionalidade do projeto].
+## 🎯 Sobre o projeto
 
-## ✨ Funcionalidades
-
-- 🔎 [Busca ou pesquisa oferecida pela aplicação]
-- 🍴 [Funcionalidade relacionada a restaurantes, receitas ou experiências gastronômicas]
-- 📱 Interface intuitiva e organizada.
-- ⭐ [Favoritos, avaliações ou outra funcionalidade, se implementada]
+O TastyTrail foi criado com o objetivo de desenvolver e aprimorar habilidades de lógica de programação utilizando a linguagem Python, aplicando na prática os conceitos estudados durante a graduação.
 
 ## 🛠️ Tecnologias utilizadas
 
-- **Frontend:** [tecnologias utilizadas]
-- **Backend:** [tecnologias utilizadas, se houver]
-- **Banco de dados:** [banco utilizado, se houver]
-- **Ferramentas:** Git e GitHub.
+- **Python** — linguagem utilizada no desenvolvimento do projeto.
+- **Git e GitHub** — versionamento e armazenamento do código-fonte.
 
-## 🚀 Como executar o projeto
+## 📚 Objetivos de aprendizagem
 
-1. Clone o repositório:
+- Desenvolver o raciocínio lógico e a capacidade de resolução de problemas.
+- Aplicar conceitos fundamentais de programação com Python.
+- Praticar a construção e a organização de código.
+- Consolidar os conhecimentos adquiridos na disciplina de Lógica de Programação.
 
-   ```bash
-   git clone https://github.com/Medmaya/tastytrail_projeto.git
-   ```
+## 🎓 Contexto acadêmico
 
-2. Entre na pasta do projeto:
-
-   ```bash
-   cd tastytrail_projeto
-   ```
-
-3. Instale as dependências necessárias, conforme a tecnologia utilizada.
-
-4. Execute a aplicação seguindo as instruções específicas do projeto.
-
-## 🎯 Objetivo do projeto
-
-Este projeto foi desenvolvido para aplicar conhecimentos de desenvolvimento de software, organização de código e construção de aplicações, além de aprimorar habilidades técnicas por meio da prática.
+- **Instituição:** Faculdades Integradas Rio Branco
+- **Curso:** Sistemas de Informação
+- **Semestre:** 2º semestre
+- **Disciplina:** Lógica de Programação
+- **Linguagem:** Python
 
 ## 👩‍💻 Desenvolvido por
 
 **Mayara Medeiros**
 
 - GitHub: [@Medmaya](https://github.com/Medmaya)
-- Projeto: [TastyTrail](https://github.com/Medmaya/tastytrail_projeto)
+- Repositório: [TastyTrail](https://github.com/Medmaya/tastytrail_projeto)
 
 ---
 
-*Projeto acadêmico/pessoal desenvolvido para fins de aprendizado e prática em desenvolvimento de software.*
+*Projeto acadêmico desenvolvido para fins de aprendizado e prática de lógica de programação com Python.*
