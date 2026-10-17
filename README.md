@@ -17,7 +17,7 @@ O TastyTrail foi criado com o objetivo de desenvolver e aprimorar habilidades de
 - Aplicar conceitos fundamentais de programação com Python.
 - Praticar a construção e a organização de código.
 - Consolidar os conhecimentos adquiridos na disciplina de Lógica de Programação.
-- Desenvolver habilidades de colaboração durante a realização de um projeto em conjunto.
+- Desenvolver habilidades de colaboração durante a realização de um projeto em dupla.
 
 ## 🎓 Contexto acadêmico
 
@@ -31,7 +31,7 @@ O TastyTrail foi criado com o objetivo de desenvolver e aprimorar habilidades de
 ## 👩‍💻 Autores
 
 - **Mayara Medeiros** — [@Medmaya](https://github.com/Medmaya)
-- **Vitor Lima** — [Perfil do GitHub](https://github.com/)
+- **Vitor Lima** — [@VitorLFR](https://github.com/VitorLFR)
 
 ---
 
